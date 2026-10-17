@@ -1,0 +1,8 @@
+{
+  "name": "SocialPilot AI - AI Social Media Automation SaaS",
+  "description": "Next-gen AI social media automation platform with user-owned API keys, multi-platform generation, durable scheduling, and full auto publishing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

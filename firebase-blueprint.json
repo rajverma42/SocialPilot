@@ -1,0 +1,315 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with personal identity and settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "photoURL": { "type": "string", "maxLength": 1024 },
+        "preferredLanguage": { "type": "string", "maxLength": 32 },
+        "timezone": { "type": "string", "maxLength": 64 },
+        "onboardingStatus": { "type": "string", "enum": ["pending", "completed", "skipped"] },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 },
+        "accountStatus": { "type": "string", "enum": ["active", "suspended", "deactivated"] }
+      },
+      "required": ["uid", "email", "createdAt", "updatedAt", "accountStatus"]
+    },
+    "Workspace": {
+      "title": "Workspace",
+      "description": "Collaborative social media management workspace",
+      "type": "object",
+      "properties": {
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 },
+        "settings": { "type": "object" }
+      },
+      "required": ["workspaceId", "name", "ownerUid", "createdAt", "updatedAt"]
+    },
+    "WorkspaceMember": {
+      "title": "WorkspaceMember",
+      "description": "Role-based membership in a workspace",
+      "type": "object",
+      "properties": {
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "uid": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["owner", "admin", "editor", "publisher", "viewer"] },
+        "status": { "type": "string", "enum": ["active", "invited", "removed"] },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["workspaceId", "uid", "role", "status", "createdAt"]
+    },
+    "AiProvider": {
+      "title": "AiProvider",
+      "description": "User-owned AI API key credential metadata",
+      "type": "object",
+      "properties": {
+        "credentialId": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "provider": { "type": "string", "enum": ["gemini", "openai", "anthropic"] },
+        "encryptedCredentialReference": { "type": "string", "maxLength": 512 },
+        "selectedModel": { "type": "string", "maxLength": 64 },
+        "connectionStatus": { "type": "string", "enum": ["valid", "invalid", "untested", "quota_exceeded"] },
+        "lastValidatedAt": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["credentialId", "ownerUid", "workspaceId", "provider", "selectedModel", "connectionStatus"]
+    },
+    "SocialAccount": {
+      "title": "SocialAccount",
+      "description": "Connected social media broadcasting destination",
+      "type": "object",
+      "properties": {
+        "socialAccountId": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "provider": { "type": "string", "maxLength": 32 },
+        "providerAccountId": { "type": "string", "maxLength": 128 },
+        "accountName": { "type": "string", "maxLength": 128 },
+        "accountType": { "type": "string", "maxLength": 64 },
+        "profileImageURL": { "type": "string", "maxLength": 1024 },
+        "connectionStatus": { "type": "string", "enum": ["connected", "disconnected", "token_expired", "permission_required"] },
+        "tokenExpiryAt": { "type": "string", "maxLength": 64 },
+        "lastVerifiedAt": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["socialAccountId", "ownerUid", "workspaceId", "provider", "accountName", "connectionStatus"]
+    },
+    "SocialCredential": {
+      "title": "SocialCredential",
+      "description": "Encrypted access and refresh tokens for social accounts",
+      "type": "object",
+      "properties": {
+        "credentialId": { "type": "string", "maxLength": 128 },
+        "socialAccountId": { "type": "string", "maxLength": 128 },
+        "encryptedAccessTokenReference": { "type": "string", "maxLength": 2048 },
+        "encryptedRefreshTokenReference": { "type": "string", "maxLength": 2048 },
+        "encryptionVersion": { "type": "string", "maxLength": 32 },
+        "tokenExpiryAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["credentialId", "socialAccountId", "encryptedAccessTokenReference", "updatedAt"]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "Central multi-channel content post",
+      "type": "object",
+      "properties": {
+        "postId": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "topic": { "type": "string", "maxLength": 512 },
+        "language": { "type": "string", "maxLength": 32 },
+        "content": { "type": "string", "maxLength": 10000 },
+        "callToAction": { "type": "string", "maxLength": 512 },
+        "sourceReference": { "type": "string", "maxLength": 1024 },
+        "status": { "type": "string", "enum": ["draft", "awaiting_approval", "scheduled", "queued", "publishing", "published", "failed", "cancelled"] },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["postId", "ownerUid", "workspaceId", "topic", "status", "createdAt", "updatedAt"]
+    },
+    "PostDestination": {
+      "title": "PostDestination",
+      "description": "Platform-specific post instance and publishing status",
+      "type": "object",
+      "properties": {
+        "destinationId": { "type": "string", "maxLength": 128 },
+        "postId": { "type": "string", "maxLength": 128 },
+        "socialAccountId": { "type": "string", "maxLength": 128 },
+        "provider": { "type": "string", "maxLength": 32 },
+        "scheduledAtUTC": { "type": "string", "maxLength": 64 },
+        "userTimezone": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["draft", "awaiting_approval", "scheduled", "queued", "publishing", "published", "failed", "cancelled", "authorization_required"] },
+        "remotePostId": { "type": "string", "maxLength": 256 },
+        "lastAttemptAt": { "type": "string", "maxLength": 64 },
+        "publishedAt": { "type": "string", "maxLength": 64 },
+        "safeErrorCode": { "type": "string", "maxLength": 64 },
+        "safeErrorMessage": { "type": "string", "maxLength": 512 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["destinationId", "postId", "socialAccountId", "provider", "status", "updatedAt"]
+    },
+    "ScheduledJob": {
+      "title": "ScheduledJob",
+      "description": "Durable queue dispatch job for publishing",
+      "type": "object",
+      "properties": {
+        "jobId": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "destinationId": { "type": "string", "maxLength": 128 },
+        "scheduledAtUTC": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["pending", "in_progress", "completed", "failed", "cancelled"] },
+        "idempotencyKey": { "type": "string", "maxLength": 128 },
+        "leaseExpiresAt": { "type": "string", "maxLength": 64 },
+        "nextAttemptAt": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["jobId", "ownerUid", "workspaceId", "destinationId", "scheduledAtUTC", "status", "idempotencyKey"]
+    },
+    "PublishingAttempt": {
+      "title": "PublishingAttempt",
+      "description": "Historical audit record of an individual publishing attempt",
+      "type": "object",
+      "properties": {
+        "attemptId": { "type": "string", "maxLength": 128 },
+        "jobId": { "type": "string", "maxLength": 128 },
+        "destinationId": { "type": "string", "maxLength": 128 },
+        "provider": { "type": "string", "maxLength": 32 },
+        "startedAt": { "type": "string", "maxLength": 64 },
+        "completedAt": { "type": "string", "maxLength": 64 },
+        "resultStatus": { "type": "string", "enum": ["success", "failed", "rate_limited", "auth_error"] },
+        "remotePostId": { "type": "string", "maxLength": 256 },
+        "safeErrorCode": { "type": "string", "maxLength": 64 },
+        "safeErrorMessage": { "type": "string", "maxLength": 512 }
+      },
+      "required": ["attemptId", "destinationId", "provider", "startedAt", "resultStatus"]
+    },
+    "AutomationRule": {
+      "title": "AutomationRule",
+      "description": "Autonomous full-auto scheduling rule",
+      "type": "object",
+      "properties": {
+        "automationId": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 128 },
+        "topic": { "type": "string", "maxLength": 256 },
+        "language": { "type": "string", "maxLength": 32 },
+        "approvalMode": { "type": "string", "enum": ["auto", "require_approval"] },
+        "autoPublishEnabled": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["active", "paused", "stopped"] },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["automationId", "ownerUid", "workspaceId", "name", "status", "createdAt"]
+    },
+    "ContentSource": {
+      "title": "ContentSource",
+      "description": "RSS and website ingestion feed source",
+      "type": "object",
+      "properties": {
+        "sourceId": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "sourceType": { "type": "string", "enum": ["rss", "atom", "website"] },
+        "sourceURL": { "type": "string", "maxLength": 1024 },
+        "enabled": { "type": "boolean" },
+        "lastCheckedAt": { "type": "string", "maxLength": 64 },
+        "lastSuccessfulCheckAt": { "type": "string", "maxLength": 64 },
+        "lastErrorCode": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["sourceId", "ownerUid", "workspaceId", "sourceURL", "enabled", "createdAt"]
+    },
+    "MediaAsset": {
+      "title": "MediaAsset",
+      "description": "Cloud Storage uploaded media asset",
+      "type": "object",
+      "properties": {
+        "mediaId": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "storagePath": { "type": "string", "maxLength": 512 },
+        "mediaType": { "type": "string", "enum": ["image", "video"] },
+        "mimeType": { "type": "string", "maxLength": 64 },
+        "checksum": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["mediaId", "ownerUid", "workspaceId", "storagePath", "mimeType", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User in-app alert notification",
+      "type": "object",
+      "properties": {
+        "notificationId": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "eventType": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 128 },
+        "message": { "type": "string", "maxLength": 512 },
+        "readAt": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["notificationId", "ownerUid", "workspaceId", "title", "message", "createdAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable security and action audit log",
+      "type": "object",
+      "properties": {
+        "auditLogId": { "type": "string", "maxLength": 128 },
+        "actorUid": { "type": "string", "maxLength": 128 },
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "action": { "type": "string", "maxLength": 64 },
+        "resourceType": { "type": "string", "maxLength": 64 },
+        "resourceId": { "type": "string", "maxLength": 128 },
+        "timestamp": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["auditLogId", "actorUid", "workspaceId", "action", "resourceType", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "#/entities/User",
+      "description": "User profile with private PII access"
+    },
+    "/workspaces/{workspaceId}": {
+      "schema": "#/entities/Workspace",
+      "description": "Workspaces configured by users"
+    },
+    "/workspaces/{workspaceId}/members/{uid}": {
+      "schema": "#/entities/WorkspaceMember",
+      "description": "Workspace role-based memberships"
+    },
+    "/workspaces/{workspaceId}/aiProviders/{credentialId}": {
+      "schema": "#/entities/AiProvider",
+      "description": "AI provider metadata with encrypted credential references"
+    },
+    "/workspaces/{workspaceId}/socialAccounts/{socialAccountId}": {
+      "schema": "#/entities/SocialAccount",
+      "description": "Connected social channels"
+    },
+    "/workspaces/{workspaceId}/posts/{postId}": {
+      "schema": "#/entities/Post",
+      "description": "Multi-platform posts and scheduling items"
+    },
+    "/workspaces/{workspaceId}/posts/{postId}/destinations/{destinationId}": {
+      "schema": "#/entities/PostDestination",
+      "description": "Per-destination publishing status"
+    },
+    "/workspaces/{workspaceId}/notifications/{notificationId}": {
+      "schema": "#/entities/Notification",
+      "description": "In-app notifications"
+    },
+    "/workspaces/{workspaceId}/mediaAssets/{mediaId}": {
+      "schema": "#/entities/MediaAsset",
+      "description": "Media asset library"
+    },
+    "/workspaces/{workspaceId}/automationRules/{automationId}": {
+      "schema": "#/entities/AutomationRule",
+      "description": "Autonomous publishing rules"
+    },
+    "/workspaces/{workspaceId}/contentSources/{sourceId}": {
+      "schema": "#/entities/ContentSource",
+      "description": "RSS & website content source configurations"
+    },
+    "/auditLogs/{auditLogId}": {
+      "schema": "#/entities/AuditLog",
+      "description": "Append-only system audit logs"
+    }
+  }
+}
