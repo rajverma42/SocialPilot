@@ -32,6 +32,7 @@ export const CalendarQueueView: React.FC<CalendarQueueViewProps> = ({
   const [viewMode, setViewMode] = useState<'queue' | 'calendar'>('queue');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
+  const [statusBanner, setStatusBanner] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const filteredPosts = posts.filter(p => {
     if (statusFilter === 'all') return true;
@@ -40,11 +41,23 @@ export const CalendarQueueView: React.FC<CalendarQueueViewProps> = ({
 
   const handlePublishNow = async (postId: string) => {
     setActionInProgress(postId);
+    setStatusBanner(null);
     try {
-      await api.publishPostNow(postId);
+      const res = await api.publishPostNow(postId);
+      if (res && res.success === false) {
+        setStatusBanner({
+          type: 'error',
+          text: 'Publication encountered platform restrictions. Check destination error details below.'
+        });
+      } else {
+        setStatusBanner({
+          type: 'success',
+          text: 'Post broadcasted successfully across connected destinations!'
+        });
+      }
       onRefreshPosts();
     } catch (err: any) {
-      alert(`Publishing failed: ${err.message}`);
+      setStatusBanner({ type: 'error', text: `Publishing failed: ${err.message}` });
     } finally {
       setActionInProgress(null);
     }
@@ -52,11 +65,13 @@ export const CalendarQueueView: React.FC<CalendarQueueViewProps> = ({
 
   const handleApprove = async (postId: string) => {
     setActionInProgress(postId);
+    setStatusBanner(null);
     try {
       await api.approvePost(postId);
+      setStatusBanner({ type: 'success', text: 'Post approved and moved to active queue.' });
       onRefreshPosts();
     } catch (err: any) {
-      alert(`Approval error: ${err.message}`);
+      setStatusBanner({ type: 'error', text: `Approval error: ${err.message}` });
     } finally {
       setActionInProgress(null);
     }
@@ -64,29 +79,50 @@ export const CalendarQueueView: React.FC<CalendarQueueViewProps> = ({
 
   const handleRetry = async (postId: string) => {
     setActionInProgress(postId);
+    setStatusBanner(null);
     try {
       await api.retryPost(postId);
+      setStatusBanner({ type: 'success', text: 'Retrying broadcast job...' });
       onRefreshPosts();
     } catch (err: any) {
-      alert(`Retry failed: ${err.message}`);
+      setStatusBanner({ type: 'error', text: `Retry failed: ${err.message}` });
     } finally {
       setActionInProgress(null);
     }
   };
 
   const handleDelete = async (postId: string) => {
-    if (!confirm('Are you sure you want to remove this post from the queue?')) return;
     try {
       await api.deletePost(postId);
+      setStatusBanner({ type: 'success', text: 'Post removed from queue.' });
       onRefreshPosts();
     } catch (err: any) {
-      alert(`Deletion error: ${err.message}`);
+      setStatusBanner({ type: 'error', text: `Deletion error: ${err.message}` });
     }
   };
 
   return (
     <div className="space-y-6">
       
+      {/* Status Banner */}
+      {statusBanner && (
+        <div className={`p-4 rounded-xl border flex items-center justify-between gap-3 text-xs font-medium animate-fade-in ${
+          statusBanner.type === 'success'
+            ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-300'
+            : 'bg-rose-950/40 border-rose-500/30 text-rose-300'
+        }`}>
+          <div className="flex items-center gap-2.5">
+            {statusBanner.type === 'success' ? (
+              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+            ) : (
+              <AlertCircle className="h-4 w-4 text-rose-400 shrink-0" />
+            )}
+            <span>{statusBanner.text}</span>
+          </div>
+          <button onClick={() => setStatusBanner(null)} className="text-slate-400 hover:text-white">✕</button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

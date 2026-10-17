@@ -403,7 +403,8 @@ export class FacebookService {
     let endpoint = `${GRAPH_API_BASE}/${pageId}/feed`;
     let body: any = {
       message,
-      access_token: pageToken
+      access_token: pageToken,
+      published: true // Explicitly command Meta Graph API to make the post public immediately
     };
 
     // If media is attached, publish via Graph API /photos endpoint
@@ -412,7 +413,8 @@ export class FacebookService {
       body = {
         url: mediaUrls[0],
         caption: message,
-        access_token: pageToken
+        access_token: pageToken,
+        published: true
       };
     }
 
@@ -434,9 +436,9 @@ export class FacebookService {
       if (code === 190) {
         userFriendlyMsg = 'Your Facebook Page Access Token has expired. Please Reconnect your Facebook account in Social Accounts.';
       } else if (code === 200) {
-        userFriendlyMsg = 'Permission denied: Your account lacks pages_manage_posts or CREATE_CONTENT permission on this Page.';
+        userFriendlyMsg = 'Permission denied or Page Unpublished: Ensure your Facebook Page is set to "Published" in Facebook Page Settings, and your Meta token has pages_manage_posts permission.';
       } else if (code === 10) {
-        userFriendlyMsg = 'Application requires Meta App Review for live public posting, or your Facebook user must be an App Tester/Admin.';
+        userFriendlyMsg = 'App Mode Restricted: For posts to be publicly visible, your Meta App must be in "Live" mode at developers.facebook.com (or your Facebook account must be added under App Roles > Roles).';
       }
 
       console.error('[Facebook Graph API Publish Error]', result);
