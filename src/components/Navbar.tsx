@@ -7,9 +7,15 @@ import {
   LayoutDashboard, 
   Globe, 
   Sparkles,
-  ChevronDown,
   Building2,
-  CheckCircle2
+  CheckCircle2,
+  Menu,
+  Download,
+  Megaphone,
+  LogIn,
+  LogOut,
+  User as UserIcon,
+  ChevronDown
 } from 'lucide-react';
 import { Workspace, User, AiProviderConfig } from '../types';
 
@@ -25,6 +31,12 @@ interface NavbarProps {
   onOpenNotifications: () => void;
   isAppMode: boolean;
   onToggleAppMode: (appMode: boolean) => void;
+  onOpenMobileDrawer?: () => void;
+  onInstallApp?: () => void;
+  isInstallable?: boolean;
+  isInstalled?: boolean;
+  onOpenAuthModal?: () => void;
+  onSignOut?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -38,14 +50,32 @@ export const Navbar: React.FC<NavbarProps> = ({
   unreadCount,
   onOpenNotifications,
   isAppMode,
-  onToggleAppMode
+  onToggleAppMode,
+  onOpenMobileDrawer,
+  onInstallApp,
+  isInstallable,
+  isInstalled,
+  onOpenAuthModal,
+  onSignOut
 }) => {
+  const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800 bg-slate-950/80 backdrop-blur-md">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         
-        {/* Brand / Logo */}
-        <div className="flex items-center gap-3">
+        {/* Brand / Logo + Mobile Menu Button */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Mobile Hamburger Button */}
+          {isAppMode && onOpenMobileDrawer && (
+            <button
+              onClick={onOpenMobileDrawer}
+              className="md:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
+              title="Open Navigation Menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          )}
+
           <button 
             onClick={() => onToggleAppMode(false)}
             className="flex items-center gap-2.5 text-left group focus:outline-none"
@@ -58,16 +88,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span>SocialPilot</span>
                 <span className="text-xs px-1.5 py-0.5 rounded font-mono bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">AI</span>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium">Auto Publish SaaS</p>
+              <p className="text-[10px] text-slate-400 font-medium">Free Auto Publish SaaS</p>
             </div>
           </button>
 
           {isAppMode && workspace && (
-            <div className="hidden md:flex items-center ml-4 pl-4 border-l border-slate-800">
+            <div className="hidden md:flex items-center ml-3 pl-3 border-l border-slate-800">
               <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300">
                 <Building2 className="h-3.5 w-3.5 text-indigo-400" />
                 <span className="font-semibold text-slate-200">{workspace.name}</span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/10 text-indigo-400 font-mono uppercase">{workspace.plan}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold uppercase tracking-wider border border-emerald-500/30">
+                  100% Free
+                </span>
               </div>
             </div>
           )}
@@ -113,6 +145,34 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
+          {/* Ads Option Quick Button */}
+          {isAppMode && (
+            <button
+              onClick={() => onNavigate('ads')}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                currentView === 'ads'
+                  ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/50'
+                  : 'bg-slate-900 text-slate-300 border border-slate-800 hover:text-indigo-400 hover:border-slate-700'
+              }`}
+              title="Configure Website & Webapp Ads"
+            >
+              <Megaphone className="h-3.5 w-3.5 text-indigo-400" />
+              <span className="hidden sm:inline">Ads Option</span>
+            </button>
+          )}
+
+          {/* PWA Install Button */}
+          {isInstallable && !isInstalled && onInstallApp && (
+            <button
+              onClick={onInstallApp}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white text-xs font-semibold transition-all shadow-sm"
+              title="Install SocialPilot AI to your device"
+            >
+              <Download className="h-3.5 w-3.5 text-indigo-400" />
+              <span className="hidden sm:inline">Install App</span>
+            </button>
+          )}
+
           {/* Switch between Marketing and App */}
           <button
             onClick={() => onToggleAppMode(!isAppMode)}
@@ -121,12 +181,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             {isAppMode ? (
               <>
                 <Globe className="h-3.5 w-3.5 text-indigo-400" />
-                <span className="hidden sm:inline">Marketing Site</span>
+                <span className="hidden sm:inline">Website</span>
               </>
             ) : (
               <>
                 <LayoutDashboard className="h-3.5 w-3.5 text-indigo-400" />
-                <span>Launch App</span>
+                <span>Launch WebApp</span>
               </>
             )}
           </button>
@@ -147,18 +207,79 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* User Profile Avatar */}
-          {isAppMode && user && (
-            <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
-              <img
-                src={user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
-                alt={user.name}
-                className="h-8 w-8 rounded-full object-cover border border-indigo-500/30"
-              />
-              <div className="hidden lg:block text-left">
-                <p className="text-xs font-semibold text-slate-200 leading-none">{user.name}</p>
-                <p className="text-[10px] text-slate-400 mt-0.5">{user.role}</p>
-              </div>
+          {/* User Authentication & Profile Menu */}
+          {user ? (
+            <div className="relative pl-2 border-l border-slate-800">
+              <button
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className="flex items-center gap-2 p-1 rounded-xl hover:bg-slate-900/80 transition"
+              >
+                <img
+                  src={user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
+                  alt={user.name}
+                  className="h-8 w-8 rounded-full object-cover border border-indigo-500/40"
+                />
+                <div className="hidden lg:block text-left">
+                  <p className="text-xs font-semibold text-slate-200 leading-none">{user.name}</p>
+                  <p className="text-[10px] text-emerald-400 mt-0.5 capitalize">{user.role || 'Member'}</p>
+                </div>
+                <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+              </button>
+
+              {/* User Dropdown Menu */}
+              {isUserMenuOpen && (
+                <div className="absolute right-0 top-12 z-50 w-56 rounded-2xl bg-slate-900 border border-slate-800 p-2 shadow-2xl space-y-1 animate-fadeIn">
+                  <div className="p-2 border-b border-slate-800">
+                    <p className="text-xs font-bold text-white truncate">{user.name}</p>
+                    <p className="text-[10px] text-slate-400 truncate font-mono">{user.email}</p>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      onNavigate('settings-ws');
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-slate-800 transition"
+                  >
+                    <UserIcon className="h-3.5 w-3.5 text-indigo-400" />
+                    <span>Workspace Profile</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      onNavigate('ads');
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-slate-800 transition"
+                  >
+                    <Megaphone className="h-3.5 w-3.5 text-indigo-400" />
+                    <span>Ads & Sponsor Settings</span>
+                  </button>
+
+                  {onSignOut && (
+                    <button
+                      onClick={() => {
+                        onSignOut();
+                        setIsUserMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 transition border-t border-slate-800/80 mt-1"
+                    >
+                      <LogOut className="h-3.5 w-3.5" />
+                      <span>Sign Out</span>
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="pl-2 border-l border-slate-800">
+              <button
+                onClick={onOpenAuthModal}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs shadow-md transition-all hover:scale-105"
+              >
+                <LogIn className="h-3.5 w-3.5" />
+                <span>Sign In</span>
+              </button>
             </div>
           )}
 

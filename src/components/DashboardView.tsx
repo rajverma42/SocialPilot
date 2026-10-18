@@ -16,6 +16,7 @@ import {
   Layers
 } from 'lucide-react';
 import { Post, SocialAccount, AnalyticsSummary, AiProviderConfig } from '../types';
+import { InFeedAd } from './ads/InFeedAd';
 
 interface DashboardViewProps {
   onNavigate: (view: string) => void;
@@ -232,6 +233,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               ))}
             </div>
           )}
+
+          {/* Native In-Feed Sponsored Ad Placement */}
+          <InFeedAd category="Developer & Marketing SaaS" />
         </div>
 
         {/* Right Column: Connected Accounts & Recent Publications */}

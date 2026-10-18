@@ -64,33 +64,33 @@ export const WorkspaceSettingsView: React.FC<WorkspaceSettingsViewProps> = ({
       setStatusMessage('Workspace preferences saved successfully.');
       onRefreshWorkspace();
     } catch (err: any) {
-      alert(`Error updating workspace: ${err.message}`);
+      setStatusMessage(`Error updating workspace: ${err.message}`);
     } finally {
       setIsSaving(false);
     }
   };
 
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
   const handleExportData = async () => {
     setIsExporting(true);
     try {
       await api.exportAccountData(workspace?.id);
+      setStatusMessage('Workspace records downloaded successfully.');
     } catch (err: any) {
-      alert(`Export error: ${err.message}`);
+      setStatusMessage(`Export error: ${err.message}`);
     } finally {
       setIsExporting(false);
     }
   };
 
   const handleDeleteAccount = async () => {
-    const confirmation = prompt('DANGER: This will permanently delete your workspace, all scheduled posts, connected accounts, and encrypted credentials. Type "DELETE" to confirm:');
-    if (confirmation !== 'DELETE') return;
-
     try {
       await api.deleteAccountData(workspace?.id);
-      alert('Workspace data and scheduled queue purged.');
-      window.location.reload();
+      setStatusMessage('Workspace data purged. Reloading...');
+      setTimeout(() => window.location.reload(), 1500);
     } catch (err: any) {
-      alert(`Deletion error: ${err.message}`);
+      setStatusMessage(`Deletion error: ${err.message}`);
     }
   };
 
@@ -114,6 +114,28 @@ export const WorkspaceSettingsView: React.FC<WorkspaceSettingsViewProps> = ({
           <span>{statusMessage}</span>
         </div>
       )}
+
+      {/* 100% Free Subscription Plan Details */}
+      <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900/70 to-indigo-950/40 border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold uppercase text-[10px] tracking-wider border border-emerald-500/30">
+              100% Free Forever Plan
+            </span>
+            <span className="text-xs text-slate-400">All Devices Supported</span>
+          </div>
+          <h3 className="text-base font-bold text-white mt-1">
+            Enterprise Features Fully Unlocked
+          </h3>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Zero subscription fees. All features (Full Auto, Durable Queue, RSS, AI Studio) are free forever, supported by sponsor ads.
+          </p>
+        </div>
+
+        <div className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-emerald-400 font-bold font-mono shrink-0">
+          $0 / Unlimited Free
+        </div>
+      </div>
 
       {/* Main Form */}
       <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-6">
@@ -228,12 +250,29 @@ export const WorkspaceSettingsView: React.FC<WorkspaceSettingsViewProps> = ({
               </p>
               <p className="text-[11px] text-rose-300/80">Irreversibly erase all posts, credentials, and scheduled jobs.</p>
             </div>
-            <button
-              onClick={handleDeleteAccount}
-              className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition shrink-0 shadow"
-            >
-              Purge Workspace
-            </button>
+            {confirmDelete ? (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleDeleteAccount}
+                  className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow"
+                >
+                  Confirm Delete
+                </button>
+                <button
+                  onClick={() => setConfirmDelete(false)}
+                  className="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs hover:bg-slate-700"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setConfirmDelete(true)}
+                className="px-4 py-2 rounded-xl bg-rose-900/60 hover:bg-rose-600 text-rose-200 hover:text-white text-xs font-semibold transition shrink-0 border border-rose-800"
+              >
+                Purge Workspace
+              </button>
+            )}
           </div>
         </div>
 

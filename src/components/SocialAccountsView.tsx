@@ -177,7 +177,7 @@ export const SocialAccountsView: React.FC<SocialAccountsViewProps> = ({
 
       if (!authWindow) {
         setIsStartingOAuth(false);
-        alert('Popup was blocked by your browser. Please allow popups to authorize with Meta.');
+        setStatusMessage({ type: 'error', text: 'Popup was blocked by your browser. Please allow popups for this site to complete Meta authorization.' });
       }
     } catch (err: any) {
       setIsStartingOAuth(false);
@@ -213,7 +213,7 @@ export const SocialAccountsView: React.FC<SocialAccountsViewProps> = ({
   const handleSaveAppCredentials = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fbAppIdInput || !fbAppSecretInput) {
-      alert('Please provide both Meta App ID and App Secret.');
+      setStatusMessage({ type: 'error', text: 'Please provide both Meta App ID and App Secret.' });
       return;
     }
 
@@ -227,7 +227,7 @@ export const SocialAccountsView: React.FC<SocialAccountsViewProps> = ({
         text: 'Meta App credentials saved. You can now click "Connect Facebook" to initiate authorization.'
       });
     } catch (err: any) {
-      alert(`Error saving Meta credentials: ${err.message}`);
+      setStatusMessage({ type: 'error', text: `Error saving Meta credentials: ${err.message}` });
     } finally {
       setIsSubmitting(false);
     }
@@ -237,7 +237,7 @@ export const SocialAccountsView: React.FC<SocialAccountsViewProps> = ({
   const handleConnectDirectPageToken = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fbDirectPageId || !fbDirectPageToken) {
-      alert('Please enter both Facebook Page ID and Page Access Token.');
+      setStatusMessage({ type: 'error', text: 'Please enter both Facebook Page ID and Page Access Token.' });
       return;
     }
 
@@ -253,7 +253,7 @@ export const SocialAccountsView: React.FC<SocialAccountsViewProps> = ({
       });
       onRefresh();
     } catch (err: any) {
-      alert(`Connection failed: ${err.message}`);
+      setStatusMessage({ type: 'error', text: `Connection failed: ${err.message}` });
     } finally {
       setIsSubmitting(false);
     }
@@ -291,12 +291,12 @@ export const SocialAccountsView: React.FC<SocialAccountsViewProps> = ({
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Disconnect this social channel? Stored access credentials will be purged from the server.')) return;
     try {
       await api.deleteSocialAccount(id);
+      setStatusMessage({ type: 'success', text: 'Social channel disconnected successfully.' });
       onRefresh();
     } catch (err: any) {
-      alert(`Error disconnecting: ${err.message}`);
+      setStatusMessage({ type: 'error', text: `Error disconnecting: ${err.message}` });
     }
   };
 
@@ -347,7 +347,7 @@ export const SocialAccountsView: React.FC<SocialAccountsViewProps> = ({
       });
       onRefresh();
     } catch (err: any) {
-      alert(`Connection failed: ${err.message}`);
+      setStatusMessage({ type: 'error', text: `Connection failed: ${err.message}` });
     } finally {
       setIsSubmitting(false);
     }

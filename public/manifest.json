@@ -1,0 +1,33 @@
+{
+  "id": "/",
+  "name": "SocialPilot AI - Social Media Automation",
+  "short_name": "SocialPilot",
+  "description": "Autonomous AI Social Media Automation SaaS. 100% Free forever with multi-platform scheduling and AI generation.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020617",
+  "theme_color": "#4f46e5",
+  "categories": ["business", "productivity", "social"],
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

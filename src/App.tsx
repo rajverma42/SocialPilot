@@ -16,6 +16,12 @@ import { WorkspaceSettingsView } from './components/WorkspaceSettingsView';
 import { HelpView } from './components/HelpView';
 import { NotificationModal } from './components/NotificationModal';
 import { LegalModals } from './components/LegalModals';
+import { AdsManagementView } from './components/AdsManagementView';
+import { AuthModal } from './components/AuthModal';
+import { MobileNavigation } from './components/MobileNavigation';
+import { AdLeaderboard } from './components/ads/AdLeaderboard';
+import { StickyAdFooter } from './components/ads/StickyAdFooter';
+import { usePwaInstall } from './hooks/usePwaInstall';
 import { 
   User, 
   Workspace, 
@@ -43,9 +49,24 @@ export default function App() {
   const [notifications, setNotifications] = useState<InAppNotification[]>([]);
   const [emergencyPaused, setEmergencyPaused] = useState(false);
 
-  // Modals
+  // Modals & Navigation
   const [isNotifModalOpen, setIsNotifModalOpen] = useState(false);
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | 'deletion' | null>(null);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Cross-device PWA Installation
+  const { isInstallable, isInstalled, isIOS, installApp } = usePwaInstall();
+
+  const handleLoginSuccess = (loggedInUser: User) => {
+    setUser(loggedInUser);
+    triggerToast(`Welcome, ${loggedInUser.name}! Signed in successfully.`, 'success');
+  };
+
+  const handleSignOut = () => {
+    setUser(null);
+    triggerToast('Signed out successfully.', 'info');
+  };
 
   // Fetch initial state
   const refreshAll = async () => {
@@ -93,22 +114,36 @@ export default function App() {
     return () => clearInterval(timer);
   }, []);
 
+  const [appToast, setAppToast] = useState<{ message: string; type: 'error' | 'success' | 'info' } | null>(null);
+
+  const triggerToast = (message: string, type: 'error' | 'success' | 'info' = 'info') => {
+    setAppToast({ message, type });
+    setTimeout(() => {
+      setAppToast(curr => (curr?.message === message ? null : curr));
+    }, 6000);
+  };
+
   const handleToggleEmergencyPause = async () => {
     try {
       const res = await api.toggleEmergencyPause();
       setEmergencyPaused(res.emergencyPublishingPaused);
+      triggerToast(
+        res.emergencyPublishingPaused ? 'All publishing paused globally (Safety lock active).' : 'Publishing safety pause lifted. Scheduled queue resumed.',
+        res.emergencyPublishingPaused ? 'info' : 'success'
+      );
       refreshAll();
-    } catch (err) {
-      console.error('Failed to toggle emergency pause:', err);
+    } catch (err: any) {
+      triggerToast(`Failed to toggle emergency pause: ${err.message}`, 'error');
     }
   };
 
   const handlePublishNow = async (postId: string) => {
     try {
       await api.publishPostNow(postId);
+      triggerToast('Post published live successfully!', 'success');
       refreshAll();
     } catch (err: any) {
-      alert(`Publishing error: ${err.message}`);
+      triggerToast(`Publishing failed: ${err.message}`, 'error');
     }
   };
 
@@ -126,8 +161,30 @@ export default function App() {
   const queueCount = posts.filter(p => p.status === 'scheduled' || p.status === 'queued').length;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans relative">
       
+      {/* Toast Notification Banner */}
+      {appToast && (
+        <div className="fixed top-16 right-4 z-50 max-w-md transition-all">
+          <div className={`flex items-start gap-3 px-4 py-3 rounded-xl border shadow-2xl backdrop-blur-md ${
+            appToast.type === 'error'
+              ? 'bg-rose-950/90 border-rose-700/50 text-rose-200'
+              : appToast.type === 'success'
+              ? 'bg-emerald-950/90 border-emerald-700/50 text-emerald-200'
+              : 'bg-indigo-950/90 border-indigo-700/50 text-indigo-200'
+          }`}>
+            <span className="text-sm font-medium flex-1 leading-snug">{appToast.message}</span>
+            <button
+              type="button"
+              onClick={() => setAppToast(null)}
+              className="text-xs px-2 py-0.5 rounded hover:bg-white/10 text-slate-400 hover:text-white"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Top Navbar */}
       <Navbar
         currentView={currentView}
@@ -141,6 +198,12 @@ export default function App() {
         onOpenNotifications={() => setIsNotifModalOpen(true)}
         isAppMode={isAppMode}
         onToggleAppMode={setIsAppMode}
+        onOpenMobileDrawer={() => setIsMobileDrawerOpen(true)}
+        onInstallApp={installApp}
+        isInstallable={isInstallable}
+        isInstalled={isInstalled}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onSignOut={handleSignOut}
       />
 
       {/* Main Container */}
@@ -151,6 +214,9 @@ export default function App() {
             setCurrentView('overview');
           }}
           onOpenLegal={setLegalModal}
+          onOpenAuthModal={() => setIsAuthModalOpen(true)}
+          onInstallApp={installApp}
+          isInstallable={isInstallable}
         />
       ) : (
         <div className="flex-1 flex overflow-hidden">
@@ -165,9 +231,12 @@ export default function App() {
             aiKeyConfigured={Boolean(aiConfig?.hasKey && aiConfig.isValid)}
           />
 
-          {/* Center Main View Area */}
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          {/* Center Main View Area with Mobile Safe Padding */}
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pb-24 md:pb-8">
             <div className="max-w-7xl mx-auto">
+
+              {/* Responsive Header Ad Banner inside WebApp */}
+              <AdLeaderboard />
               
               {currentView === 'overview' && (
                 <DashboardView
@@ -294,6 +363,10 @@ export default function App() {
                 />
               )}
 
+              {currentView === 'ads' && (
+                <AdsManagementView onRefreshAll={refreshAll} />
+              )}
+
               {currentView === 'help' && (
                 <HelpView />
               )}
@@ -302,6 +375,27 @@ export default function App() {
           </main>
 
         </div>
+      )}
+
+      {/* Sticky Bottom Ad Banner */}
+      {isAppMode && <StickyAdFooter />}
+
+      {/* Mobile Bottom Navigation & Drawer */}
+      {isAppMode && (
+        <MobileNavigation
+          currentView={currentView}
+          onNavigate={setCurrentView}
+          isDrawerOpen={isMobileDrawerOpen}
+          onToggleDrawer={setIsMobileDrawerOpen}
+          queueCount={queueCount}
+          autoModeActive={autoConfig?.enabled ?? false}
+          unreadNotifications={unreadNotifications}
+          workspace={workspace}
+          onInstallApp={installApp}
+          isInstallable={isInstallable}
+          isInstalled={isInstalled}
+          isIOS={isIOS}
+        />
       )}
 
       {/* In-App Notifications Modal */}
@@ -317,6 +411,13 @@ export default function App() {
       <LegalModals
         activeModal={legalModal}
         onClose={() => setLegalModal(null)}
+      />
+
+      {/* Full Professional User Authentication & Login Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
       />
 
     </div>

@@ -319,3 +319,49 @@ export interface AnalyticsSummary {
   dailyActivity?: { date: string; published: number; scheduled: number }[];
   connectedAccountsCount?: number;
 }
+
+export interface AdUnitPerformance {
+  id: string;
+  name: string;
+  format: 'leaderboard' | 'infeed' | 'rewarded' | 'sticky';
+  impressions: number;
+  clicks: number;
+  earnings: number;
+  ctr: string;
+}
+
+export interface DailyAdEarnings {
+  date: string;
+  impressions: number;
+  clicks: number;
+  earnings: number;
+}
+
+export interface MonetizationConfig {
+  enabled: boolean;
+  adSensePublisherId: string;
+  autoAdsEnabled: boolean;
+  testAdsMode: boolean;
+  headerAdEnabled: boolean;
+  inFeedAdEnabled: boolean;
+  rewardedAdEnabled: boolean;
+  stickyFooterAdEnabled: boolean;
+  customScriptCode?: string;
+  refreshIntervalSeconds: number;
+  payoutThreshold: number;
+  payoutMethod: 'adsense' | 'paypal' | 'bank_wire' | 'upi';
+  payoutAddress?: string;
+  stats: {
+    impressions: number;
+    clicks: number;
+    todayEarnings: number;
+    yesterdayEarnings: number;
+    last7DaysEarnings: number;
+    monthEarnings: number;
+    totalLifetimeEarnings: number;
+    eCpm: number;
+    dailyHistory: DailyAdEarnings[];
+    unitPerformance: AdUnitPerformance[];
+  };
+}
+

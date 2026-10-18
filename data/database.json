@@ -1,0 +1,588 @@
+{
+  "users": [
+    {
+      "id": "usr-admin-01",
+      "name": "Alex Rivera",
+      "email": "riteshkumarverma486@gmail.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+      "role": "owner",
+      "createdAt": "2026-10-17T13:31:30.537Z"
+    }
+  ],
+  "workspaces": [
+    {
+      "id": "ws-default-01",
+      "name": "Velocity Tech Media",
+      "slug": "velocity-tech",
+      "ownerId": "usr-admin-01",
+      "timezone": "Asia/Kolkata",
+      "defaultLanguage": "English",
+      "createdAt": "2026-10-17T13:31:30.537Z",
+      "membersCount": 3,
+      "plan": "pro"
+    }
+  ],
+  "aiConfigs": {
+    "ws-default-01": {
+      "provider": "gemini",
+      "maskedApiKey": "AQ.Ab8...brtA",
+      "hasKey": true,
+      "selectedModel": "gemini-3.8-flash",
+      "isValid": true,
+      "lastValidatedAt": "2026-10-17T13:31:30.537Z",
+      "totalGenerations": 42,
+      "estimatedTokensUsed": 128500
+    }
+  },
+  "socialAccounts": [
+    {
+      "id": "acc-tg-01",
+      "workspaceId": "ws-default-01",
+      "platform": "telegram",
+      "accountName": "TechRadar Official Broadcast",
+      "accountHandle": "@techradar_daily",
+      "avatarUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80",
+      "status": "connected",
+      "connectedAt": "2026-10-12T13:31:30.537Z",
+      "lastHealthCheckAt": "2026-10-17T13:31:30.537Z",
+      "credentialsMetadata": {
+        "telegramChatId": "@techradar_channel",
+        "telegramBotUsername": "@SocialPilotBot",
+        "scopes": [
+          "sendMessage",
+          "sendPhoto",
+          "postMessages"
+        ]
+      }
+    },
+    {
+      "id": "acc-x-01",
+      "workspaceId": "ws-default-01",
+      "platform": "x",
+      "accountName": "Alex Rivera (Tech)",
+      "accountHandle": "@alex_builds_ai",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+      "status": "connected",
+      "connectedAt": "2026-10-05T13:31:30.537Z",
+      "lastHealthCheckAt": "2026-10-17T13:31:30.537Z",
+      "credentialsMetadata": {
+        "scopes": [
+          "tweet.read",
+          "tweet.write",
+          "users.read"
+        ]
+      }
+    },
+    {
+      "id": "acc-li-01",
+      "workspaceId": "ws-default-01",
+      "platform": "linkedin",
+      "accountName": "Velocity Growth Labs",
+      "accountHandle": "company/velocity-growth",
+      "avatarUrl": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=150&auto=format&fit=crop&q=80",
+      "status": "connected",
+      "connectedAt": "2026-09-27T13:31:30.537Z",
+      "lastHealthCheckAt": "2026-10-17T13:31:30.537Z",
+      "credentialsMetadata": {
+        "scopes": [
+          "w_member_social",
+          "r_liteprofile"
+        ]
+      }
+    },
+    {
+      "id": "acc-fb-01",
+      "workspaceId": "ws-default-01",
+      "platform": "facebook",
+      "accountName": "Tech Creators Hub",
+      "accountHandle": "fb.com/techcreatorshub",
+      "avatarUrl": "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=150&auto=format&fit=crop&q=80",
+      "status": "permission_required",
+      "connectedAt": "2026-10-15T13:31:30.537Z",
+      "lastHealthCheckAt": "2026-10-17T13:31:30.537Z",
+      "credentialsMetadata": {
+        "scopes": [
+          "pages_show_list",
+          "pages_read_engagement"
+        ]
+      }
+    },
+    {
+      "id": "acc-ig-01",
+      "workspaceId": "ws-default-01",
+      "platform": "instagram",
+      "accountName": "velocity_creators",
+      "accountHandle": "@velocity_creators",
+      "avatarUrl": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=150&auto=format&fit=crop&q=80",
+      "status": "connected",
+      "connectedAt": "2026-10-13T13:31:30.537Z",
+      "lastHealthCheckAt": "2026-10-17T13:31:30.537Z",
+      "credentialsMetadata": {
+        "scopes": [
+          "instagram_basic",
+          "instagram_content_publish"
+        ]
+      }
+    },
+    {
+      "id": "acc-yt-01",
+      "workspaceId": "ws-default-01",
+      "platform": "youtube",
+      "accountName": "Velocity AI Insights",
+      "accountHandle": "@VelocityAI",
+      "avatarUrl": "https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=150&auto=format&fit=crop&q=80",
+      "status": "connected",
+      "connectedAt": "2026-10-07T13:31:30.537Z",
+      "lastHealthCheckAt": "2026-10-17T13:31:30.537Z",
+      "credentialsMetadata": {
+        "scopes": [
+          "https://www.googleapis.com/auth/youtube.upload"
+        ]
+      }
+    }
+  ],
+  "posts": [
+    {
+      "id": "post-demo-01",
+      "workspaceId": "ws-default-01",
+      "topic": "AI Agents in 2026: From Chatbots to Autonomous Co-workers",
+      "niche": "Technology",
+      "language": "English",
+      "tone": "Professional & Authoritative",
+      "format": "Multi-Platform Breakdown",
+      "status": "published",
+      "mode": "manual",
+      "targetPlatforms": [
+        "x",
+        "linkedin",
+        "telegram"
+      ],
+      "platformContents": {
+        "x": {
+          "caption": "AI agents are no longer just answering questions—they are actively negotiating APIs, managing multi-step workflows, and deploying code. The shift from conversational AI to autonomous execution is the single biggest unlock of 2026. What routine tasks have you automated this quarter?",
+          "hashtags": [
+            "#AIAgents",
+            "#Automation",
+            "#TechTrends2026"
+          ],
+          "characterCount": 268,
+          "isValid": true
+        },
+        "linkedin": {
+          "title": "The Shift from Passive LLMs to Autonomous Execution",
+          "caption": "For the last 3 years, enterprise AI was primarily \"chat with your docs\".\n\nIn 2026, the paradigm has completely inverted:\n1. Agents orchestrate distributed microservices.\n2. Autonomous retry budgets and state machines prevent hallucinatory drift.\n3. Human-in-the-loop validation acts as an escalation gate rather than a manual bottleneck.\n\nThe real ROI is in autonomous workflows. Where is your team deploying agents first?",
+          "hashtags": [
+            "#ArtificialIntelligence",
+            "#EnterpriseAI",
+            "#Productivity",
+            "#FutureOfWork"
+          ],
+          "characterCount": 520,
+          "isValid": true
+        },
+        "telegram": {
+          "caption": "🚀 <b>AI Agents in 2026: Autonomous Co-workers are Here</b>\n\nThe landscape has evolved beyond simple chatbots. Modern agents now handle:\n• Multi-tool orchestration\n• Error auto-recovery\n• Scheduled proactive alerts\n\nJoin the discussion in our tech channel!",
+          "hashtags": [
+            "#AIAgents",
+            "#TelegramTech"
+          ],
+          "characterCount": 284,
+          "isValid": true
+        },
+        "facebook": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "instagram": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "youtube": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "pinterest": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "tiktok": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        }
+      },
+      "mediaUrls": [
+        "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80"
+      ],
+      "scheduledTime": "2026-10-17T11:31:30.538Z",
+      "publishedTime": "2026-10-17T11:31:30.538Z",
+      "autoApproval": true,
+      "createdAt": "2026-10-16T13:31:30.538Z",
+      "updatedAt": "2026-10-17T11:31:30.538Z",
+      "remotePostIds": {
+        "x": "x-tweet-1847192837",
+        "linkedin": "urn:li:share:71982736192",
+        "telegram": "msg-94812"
+      },
+      "publishingAttempts": [
+        {
+          "id": "att-1",
+          "postId": "post-demo-01",
+          "platform": "x",
+          "timestamp": "2026-10-17T11:31:30.538Z",
+          "status": "success",
+          "remotePostId": "x-tweet-1847192837"
+        },
+        {
+          "id": "att-2",
+          "postId": "post-demo-01",
+          "platform": "linkedin",
+          "timestamp": "2026-10-17T11:31:30.538Z",
+          "status": "success",
+          "remotePostId": "urn:li:share:71982736192"
+        },
+        {
+          "id": "att-3",
+          "postId": "post-demo-01",
+          "platform": "telegram",
+          "timestamp": "2026-10-17T11:31:30.538Z",
+          "status": "success",
+          "remotePostId": "msg-94812"
+        }
+      ]
+    },
+    {
+      "id": "post-demo-02",
+      "workspaceId": "ws-default-01",
+      "topic": "Mastering Time-Zone Publishing for Global SaaS Engagement",
+      "niche": "Business",
+      "language": "English",
+      "tone": "Engaging & Viral",
+      "format": "Tips & Strategy",
+      "status": "scheduled",
+      "mode": "approval_required",
+      "targetPlatforms": [
+        "x",
+        "linkedin"
+      ],
+      "platformContents": {
+        "x": {
+          "caption": "Posting at the wrong time cuts your reach by up to 60%.\n\nHere is how we schedule across 3 continents:\n⏰ US East: 08:30 AM EST\n⏰ Europe: 13:30 CET\n⏰ Asia-Pacific: 19:30 IST\n\nConsistency beats frequency every single week. When do you see your peak metrics?",
+          "hashtags": [
+            "#SaaSGrowth",
+            "#ContentMarketing",
+            "#SocialMediaTips"
+          ],
+          "characterCount": 275,
+          "isValid": true
+        },
+        "linkedin": {
+          "title": "Global Social Scheduling: The 3-Window Formula",
+          "caption": "If your audience spans San Francisco to Singapore, one daily post will miss 2/3 of your potential viewers.\n\nHere is our tested 3-window scheduling cadence:\n• Window A (Asia Evening / Europe Noon): Focus on educational case studies\n• Window B (US Morning): Tactical breakdowns & product announcements\n• Window C (US Afternoon / APAC Morning): Engaging community questions\n\nTest each window for 14 days and audit your impression curve.",
+          "hashtags": [
+            "#GrowthStrategy",
+            "#SocialMediaStrategy",
+            "#B2BMarketing"
+          ],
+          "characterCount": 489,
+          "isValid": true
+        },
+        "telegram": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "facebook": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "instagram": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "youtube": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "pinterest": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "tiktok": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        }
+      },
+      "mediaUrls": [],
+      "scheduledTime": "2026-10-17T18:31:30.538Z",
+      "autoApproval": false,
+      "createdAt": "2026-10-17T13:31:30.538Z",
+      "updatedAt": "2026-10-17T13:31:30.538Z",
+      "publishingAttempts": []
+    },
+    {
+      "id": "post-demo-03",
+      "workspaceId": "ws-default-01",
+      "topic": "5 Modern CSS Tricks Every Web Developer Should Know",
+      "niche": "Technology",
+      "language": "English",
+      "tone": "Educational & Deep",
+      "format": "Carousel Breakdown",
+      "status": "queued",
+      "mode": "full_auto",
+      "targetPlatforms": [
+        "telegram",
+        "instagram"
+      ],
+      "platformContents": {
+        "telegram": {
+          "caption": "🎨 <b>5 CSS Superpowers You Can Use Right Now</b>\n\n1. <code>@starting-style</code> for enter animations\n2. Native CSS Nesting without Sass\n3. <code>subgrid</code> for pixel-perfect card layouts\n4. <code>text-wrap: balance</code> for titles\n5. Container Queries for component-level responsiveness\n\nSave this for your next project!",
+          "hashtags": [
+            "#WebDev",
+            "#CSS",
+            "#Frontend"
+          ],
+          "characterCount": 320,
+          "isValid": true
+        },
+        "instagram": {
+          "caption": "Level up your frontend game in 2026! 🔥\n\nModern CSS has evolved faster than ever. From subgrid to @starting-style, writing clean styles has never felt better.\n\nSwipe through the carousel to see code snippets and live examples. Which one do you use most often in your projects?\n\nDrop a comment below! 👇",
+          "hashtags": [
+            "#FrontendDeveloper",
+            "#WebDesign",
+            "#CSS3",
+            "#TechTips",
+            "#CodingLife"
+          ],
+          "characterCount": 380,
+          "isValid": true
+        },
+        "x": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "linkedin": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "facebook": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "youtube": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "pinterest": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        },
+        "tiktok": {
+          "caption": "",
+          "hashtags": [],
+          "characterCount": 0,
+          "isValid": true
+        }
+      },
+      "mediaUrls": [
+        "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80"
+      ],
+      "scheduledTime": "2026-10-18T07:31:30.538Z",
+      "autoApproval": true,
+      "createdAt": "2026-10-17T13:31:30.538Z",
+      "updatedAt": "2026-10-17T13:31:30.538Z",
+      "publishingAttempts": []
+    }
+  ],
+  "autoConfigs": {
+    "ws-default-01": {
+      "id": "auto-01",
+      "workspaceId": "ws-default-01",
+      "enabled": true,
+      "topicNiche": "AI Tools, SaaS Innovations & Developer Productivity",
+      "targetAudience": "Software Engineers, Tech Founders & Agency Marketers",
+      "brandVoice": "Authoritative, tactical, insightful without hype",
+      "language": "English",
+      "postsPerDay": 2,
+      "preferredTimeWindows": [
+        "09:30",
+        "16:00"
+      ],
+      "selectedPlatforms": [
+        "telegram",
+        "x",
+        "linkedin"
+      ],
+      "autoApprove": false,
+      "requiredPhrases": [
+        "Practical takeaway",
+        "Real-world example"
+      ],
+      "forbiddenPhrases": [
+        "Game changer",
+        "Mind-blowing",
+        "Revolutionary"
+      ],
+      "lastRunAt": "2026-10-17T09:31:30.538Z",
+      "nextRunAt": "2026-10-17T19:31:30.538Z",
+      "totalGenerated": 18,
+      "totalPublished": 14
+    }
+  },
+  "rssFeeds": [
+    {
+      "id": "rss-01",
+      "workspaceId": "ws-default-01",
+      "feedUrl": "https://news.ycombinator.com/rss",
+      "title": "Hacker News Frontpage",
+      "status": "active",
+      "lastPolledAt": "2026-10-17T13:31:30.538Z",
+      "itemCount": 15,
+      "autoGeneratePosts": false,
+      "targetPlatforms": [
+        "x",
+        "telegram"
+      ]
+    },
+    {
+      "id": "rss-02",
+      "workspaceId": "ws-default-01",
+      "feedUrl": "https://techcrunch.com/feed/",
+      "title": "TechCrunch Feed",
+      "status": "active",
+      "lastPolledAt": "2026-10-17T11:31:30.538Z",
+      "itemCount": 20,
+      "autoGeneratePosts": false,
+      "targetPlatforms": [
+        "linkedin",
+        "facebook"
+      ]
+    }
+  ],
+  "rssItems": [
+    {
+      "id": "item-01",
+      "feedId": "rss-01",
+      "title": "DeepSeek announces open-source distributed model orchestration",
+      "link": "https://example.com/deepseek-distributed",
+      "pubDate": "2026-10-17T10:31:30.538Z",
+      "description": "New research paper details sparse attention mechanisms for scalable multi-node inference with reduced latency."
+    },
+    {
+      "id": "item-02",
+      "feedId": "rss-02",
+      "title": "Why B2B SaaS Founders are investing in user-owned AI API Keys",
+      "link": "https://example.com/saas-byo-keys",
+      "pubDate": "2026-10-17T07:31:30.538Z",
+      "description": "Platforms shifting toward transparent billing models let enterprise customers bring their own Gemini and cloud credentials."
+    }
+  ],
+  "mediaAssets": [
+    {
+      "id": "media-01",
+      "workspaceId": "ws-default-01",
+      "name": "ai-architecture-diagram.jpg",
+      "url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80",
+      "size": 482000,
+      "mimeType": "image/jpeg",
+      "aspectRatio": "16:9",
+      "folder": "Infographics",
+      "tags": [
+        "AI",
+        "Architecture",
+        "Diagram"
+      ],
+      "createdAt": "2026-10-17T13:31:30.538Z"
+    },
+    {
+      "id": "media-02",
+      "workspaceId": "ws-default-01",
+      "name": "coding-setup-workspace.jpg",
+      "url": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80",
+      "size": 720000,
+      "mimeType": "image/jpeg",
+      "aspectRatio": "1:1",
+      "folder": "Creator Shots",
+      "tags": [
+        "Developer",
+        "Code",
+        "Clean"
+      ],
+      "createdAt": "2026-10-17T13:31:30.538Z"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "camp-01",
+      "workspaceId": "ws-default-01",
+      "name": "Q4 AI Product Launch Campaign",
+      "description": "Promoting the next-gen autonomous automation workflows across Telegram, LinkedIn and X.",
+      "startDate": "2026-10-10T13:31:30.538Z",
+      "endDate": "2026-10-31T13:31:30.538Z",
+      "totalPosts": 8,
+      "publishedPosts": 5,
+      "status": "active",
+      "targetPlatforms": [
+        "telegram",
+        "x",
+        "linkedin"
+      ]
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-01",
+      "workspaceId": "ws-default-01",
+      "type": "post_published",
+      "title": "Post Published Successfully",
+      "message": "Your post \"AI Agents in 2026\" was published to X, LinkedIn, and Telegram.",
+      "timestamp": "2026-10-17T11:31:30.538Z",
+      "read": false,
+      "link": "/app/queue"
+    },
+    {
+      "id": "notif-02",
+      "workspaceId": "ws-default-01",
+      "type": "auto_mode_run",
+      "title": "Full Auto Generated 2 Drafts",
+      "message": "Daily auto-generation created 2 new posts awaiting your review.",
+      "timestamp": "2026-10-17T09:31:30.538Z",
+      "read": false,
+      "link": "/app/auto"
+    }
+  ],
+  "systemSettings": {
+    "emergencyPublishingPaused": false,
+    "lastWorkerRunAt": "2026-10-17T15:37:46.778Z"
+  }
+}

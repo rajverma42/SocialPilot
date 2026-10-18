@@ -11,7 +11,8 @@ import {
   AiProviderConfig,
   Workspace,
   User,
-  SocialPlatform
+  SocialPlatform,
+  MonetizationConfig
 } from '../types';
 
 export const api = {
@@ -388,5 +389,51 @@ export const api = {
       body: JSON.stringify({ workspaceId })
     });
     return res.json();
+  },
+
+  // Monetization & Ads Earnings
+  async getMonetizationConfig(): Promise<MonetizationConfig> {
+    const res = await fetch('/api/monetization');
+    return res.json();
+  },
+  async updateMonetizationConfig(data: Partial<MonetizationConfig>): Promise<MonetizationConfig> {
+    const res = await fetch('/api/monetization', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  },
+  async recordAdImpression(unitId?: string) {
+    const res = await fetch('/api/monetization/record-impression', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ unitId })
+    });
+    return res.json();
+  },
+  async recordAdClick(unitId?: string) {
+    const res = await fetch('/api/monetization/record-click', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ unitId })
+    });
+    return res.json();
+  },
+  async claimRewardedBonus(): Promise<{ success: boolean; bonusCredits: number; todayEarnings: number; totalLifetimeEarnings: number }> {
+    const res = await fetch('/api/monetization/claim-reward', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return res.json();
+  },
+  async exportEarningsReport() {
+    const res = await fetch('/api/monetization/export');
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `socialpilot-ads-earnings-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
   }
 };

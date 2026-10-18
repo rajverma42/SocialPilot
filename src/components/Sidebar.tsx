@@ -15,7 +15,8 @@ import {
   HelpCircle,
   Clock,
   CheckCircle2,
-  AlertTriangle
+  AlertTriangle,
+  Megaphone
 } from 'lucide-react';
 
 interface NavItem {
@@ -74,6 +75,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       title: 'Intelligence & Growth',
       items: [
         { id: 'analytics', label: 'Analytics & Reports', icon: BarChart3 },
+        { id: 'ads', label: 'Ads & Sponsor Spaces', icon: Megaphone, badge: 'AdSense' },
         { id: 'notifications', label: 'Notifications', icon: Bell, count: unreadNotifications },
       ]
     },
@@ -94,7 +96,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-64 shrink-0 border-r border-slate-800 bg-slate-950/90 flex flex-col justify-between h-[calc(100vh-4rem)] overflow-y-auto">
+    <aside className="hidden md:flex w-64 shrink-0 border-r border-slate-800 bg-slate-950/90 flex-col justify-between h-[calc(100vh-4rem)] overflow-y-auto">
       <div className="p-4 space-y-6">
         
         {/* Navigation Sections */}

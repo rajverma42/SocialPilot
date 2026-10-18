@@ -11,7 +11,8 @@ import {
   RssItem, 
   MediaAsset, 
   Campaign, 
-  InAppNotification 
+  InAppNotification,
+  MonetizationConfig 
 } from '../src/types';
 import { maskSecret } from './crypto-utils';
 
@@ -31,10 +32,52 @@ interface DatabaseSchema {
     emergencyPublishingPaused: boolean;
     lastWorkerRunAt?: string;
   };
+  monetization: MonetizationConfig;
 }
 
 const DATA_DIR = path.resolve(process.cwd(), 'data');
 const DB_FILE = path.join(DATA_DIR, 'database.json');
+
+export const defaultMonetization: MonetizationConfig = {
+  enabled: true,
+  adSensePublisherId: 'ca-pub-6603222683084860',
+  autoAdsEnabled: true,
+  testAdsMode: true,
+  headerAdEnabled: true,
+  inFeedAdEnabled: true,
+  rewardedAdEnabled: true,
+  stickyFooterAdEnabled: true,
+  customScriptCode: '',
+  refreshIntervalSeconds: 45,
+  payoutThreshold: 100,
+  payoutMethod: 'adsense',
+  payoutAddress: 'riteshkumarverma486@gmail.com',
+  stats: {
+    impressions: 4892,
+    clicks: 142,
+    todayEarnings: 6.48,
+    yesterdayEarnings: 12.85,
+    last7DaysEarnings: 74.20,
+    monthEarnings: 218.45,
+    totalLifetimeEarnings: 642.10,
+    eCpm: 2.65,
+    dailyHistory: [
+      { date: 'Oct 11', impressions: 620, clicks: 18, earnings: 9.80 },
+      { date: 'Oct 12', impressions: 710, clicks: 22, earnings: 11.40 },
+      { date: 'Oct 13', impressions: 680, clicks: 19, earnings: 10.20 },
+      { date: 'Oct 14', impressions: 830, clicks: 26, earnings: 13.90 },
+      { date: 'Oct 15', impressions: 790, clicks: 21, earnings: 12.10 },
+      { date: 'Oct 16', impressions: 740, clicks: 20, earnings: 11.20 },
+      { date: 'Oct 17', impressions: 522, clicks: 16, earnings: 8.60 }
+    ],
+    unitPerformance: [
+      { id: 'unit-header', name: 'Header Top Leaderboard', format: 'leaderboard', impressions: 2120, clicks: 68, earnings: 32.50, ctr: '3.2%' },
+      { id: 'unit-infeed', name: 'Dashboard In-Feed Sponsor', format: 'infeed', impressions: 1450, clicks: 42, earnings: 21.80, ctr: '2.9%' },
+      { id: 'unit-sticky', name: 'Mobile Sticky Footer Banner', format: 'sticky', impressions: 980, clicks: 24, earnings: 12.60, ctr: '2.4%' },
+      { id: 'unit-rewarded', name: 'Rewarded AI Boost Video', format: 'rewarded', impressions: 342, clicks: 8, earnings: 7.30, ctr: '2.3%' }
+    ]
+  }
+};
 
 function getInitialData(): DatabaseSchema {
   const defaultWorkspaceId = 'ws-default-01';
@@ -61,7 +104,7 @@ function getInitialData(): DatabaseSchema {
         defaultLanguage: 'English',
         createdAt: new Date().toISOString(),
         membersCount: 3,
-        plan: 'pro'
+        plan: 'free'
       }
     ],
     aiConfigs: {
@@ -446,7 +489,8 @@ function getInitialData(): DatabaseSchema {
     systemSettings: {
       emergencyPublishingPaused: false,
       lastWorkerRunAt: new Date().toISOString()
-    }
+    },
+    monetization: { ...defaultMonetization }
   };
 }
 
@@ -469,7 +513,11 @@ class JsonDatabase {
     try {
       if (fs.existsSync(DB_FILE)) {
         const raw = fs.readFileSync(DB_FILE, 'utf8');
-        return JSON.parse(raw);
+        const parsed: DatabaseSchema = JSON.parse(raw);
+        if (!parsed.monetization) {
+          parsed.monetization = { ...defaultMonetization };
+        }
+        return parsed;
       }
     } catch (err) {
       console.error('Failed to parse database.json, initializing fresh data:', err);
@@ -676,6 +724,109 @@ class JsonDatabase {
   public setSystemSettings(settings: Partial<DatabaseSchema['systemSettings']>) {
     this.data.systemSettings = { ...this.data.systemSettings, ...settings };
     this.save();
+  }
+
+  // Monetization & Ads Earnings Methods
+  public getMonetizationConfig(): MonetizationConfig {
+    if (!this.data.monetization) {
+      this.data.monetization = { ...defaultMonetization };
+      this.save();
+    }
+    return this.data.monetization;
+  }
+
+  public updateMonetizationConfig(updates: Partial<MonetizationConfig>): MonetizationConfig {
+    const current = this.getMonetizationConfig();
+    this.data.monetization = {
+      ...current,
+      ...updates,
+      stats: {
+        ...current.stats,
+        ...(updates.stats || {})
+      }
+    };
+    this.save();
+    return this.data.monetization;
+  }
+
+  public recordAdImpression(unitId?: string) {
+    const mon = this.getMonetizationConfig();
+    const cpmRate = (mon.stats.eCpm || 2.65) / 1000;
+    mon.stats.impressions += 1;
+    mon.stats.todayEarnings = Number((mon.stats.todayEarnings + cpmRate).toFixed(4));
+    mon.stats.monthEarnings = Number((mon.stats.monthEarnings + cpmRate).toFixed(4));
+    mon.stats.totalLifetimeEarnings = Number((mon.stats.totalLifetimeEarnings + cpmRate).toFixed(4));
+
+    if (unitId && mon.stats.unitPerformance) {
+      const u = mon.stats.unitPerformance.find(p => p.id === unitId);
+      if (u) {
+        u.impressions += 1;
+        u.earnings = Number((u.earnings + cpmRate).toFixed(3));
+        u.ctr = ((u.clicks / Math.max(1, u.impressions)) * 100).toFixed(1) + '%';
+      }
+    }
+    this.save();
+    return { impressions: mon.stats.impressions, todayEarnings: mon.stats.todayEarnings };
+  }
+
+  public recordAdClick(unitId?: string) {
+    const mon = this.getMonetizationConfig();
+    const clickRev = 0.22; // Typical search/native CTR value
+    mon.stats.clicks += 1;
+    mon.stats.todayEarnings = Number((mon.stats.todayEarnings + clickRev).toFixed(3));
+    mon.stats.monthEarnings = Number((mon.stats.monthEarnings + clickRev).toFixed(3));
+    mon.stats.totalLifetimeEarnings = Number((mon.stats.totalLifetimeEarnings + clickRev).toFixed(3));
+
+    if (unitId && mon.stats.unitPerformance) {
+      const u = mon.stats.unitPerformance.find(p => p.id === unitId);
+      if (u) {
+        u.clicks += 1;
+        u.earnings = Number((u.earnings + clickRev).toFixed(3));
+        u.ctr = ((u.clicks / Math.max(1, u.impressions)) * 100).toFixed(1) + '%';
+      }
+    }
+    this.save();
+    return { clicks: mon.stats.clicks, todayEarnings: mon.stats.todayEarnings };
+  }
+
+  public claimRewardedAdBonus() {
+    const mon = this.getMonetizationConfig();
+    const rewardedRev = 0.18;
+    mon.stats.impressions += 1;
+    mon.stats.todayEarnings = Number((mon.stats.todayEarnings + rewardedRev).toFixed(3));
+    mon.stats.monthEarnings = Number((mon.stats.monthEarnings + rewardedRev).toFixed(3));
+    mon.stats.totalLifetimeEarnings = Number((mon.stats.totalLifetimeEarnings + rewardedRev).toFixed(3));
+
+    const rewardedUnit = mon.stats.unitPerformance?.find(p => p.id === 'unit-rewarded');
+    if (rewardedUnit) {
+      rewardedUnit.impressions += 1;
+      rewardedUnit.earnings = Number((rewardedUnit.earnings + rewardedRev).toFixed(3));
+    }
+
+    // Add +25 generation quota to aiConfigs
+    const defaultWs = 'ws-default-01';
+    if (this.data.aiConfigs[defaultWs]) {
+      this.data.aiConfigs[defaultWs].totalGenerations = Math.max(0, (this.data.aiConfigs[defaultWs].totalGenerations || 0) + 25);
+    }
+
+    // Add InAppNotification
+    this.addNotification({
+      id: `notif-reward-${Date.now()}`,
+      workspaceId: defaultWs,
+      type: 'system',
+      title: '🎁 Rewarded Sponsor Bonus Claimed!',
+      message: 'You completed watching a sponsor ad. +25 Free AI Generations added to your balance!',
+      timestamp: new Date().toISOString(),
+      read: false
+    });
+
+    this.save();
+    return {
+      success: true,
+      bonusCredits: 25,
+      todayEarnings: mon.stats.todayEarnings,
+      totalLifetimeEarnings: mon.stats.totalLifetimeEarnings
+    };
   }
 }
 

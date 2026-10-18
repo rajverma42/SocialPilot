@@ -17,16 +17,30 @@ import {
   RefreshCw,
   ExternalLink,
   Lock,
-  Globe
+  Globe,
+  DollarSign,
+  Gift,
+  Download,
+  Smartphone
 } from 'lucide-react';
 import { SocialPlatform } from '../types';
+import { AdLeaderboard } from './ads/AdLeaderboard';
 
 interface MarketingSiteProps {
   onLaunchApp: () => void;
   onOpenLegal: (modal: 'privacy' | 'terms' | 'deletion') => void;
+  onInstallApp?: () => void;
+  isInstallable?: boolean;
+  onOpenAuthModal?: () => void;
 }
 
-export const MarketingSite: React.FC<MarketingSiteProps> = ({ onLaunchApp, onOpenLegal }) => {
+export const MarketingSite: React.FC<MarketingSiteProps> = ({ 
+  onLaunchApp, 
+  onOpenLegal,
+  onInstallApp,
+  isInstallable,
+  onOpenAuthModal
+}) => {
   // Interactive demo playground state
   const [demoTopic, setDemoTopic] = useState('Why Autonomous AI Agents Are Outpacing Traditional Automation');
   const [demoPlatform, setDemoPlatform] = useState<SocialPlatform>('x');
@@ -58,54 +72,51 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({ onLaunchApp, onOpe
 
   const pricingTiers = [
     {
-      name: 'Starter Creator',
+      name: 'Free Creator',
       price: '$0',
       period: 'forever',
-      description: 'Ideal for independent makers and solo creators using their own Gemini key.',
+      description: 'Zero cost forever. Ideal for creators, solo makers, and social media influencers.',
       features: [
         'Bring your own Gemini API key (0% markup)',
-        '3 Connected Social Accounts',
-        '30 Scheduled Posts per month',
-        'Topic-to-Multi-Platform Generator',
-        'Real-time Telegram Bot publishing',
-        'Durable 24/7 background worker'
+        'Unlimited Connected Social Accounts',
+        'Unlimited Scheduled Posts & Queue slots',
+        'Topic-to-Multi-Platform AI Studio',
+        'Real-time Telegram Bot & Graph API publishing',
+        'Durable 24/7 background scheduler daemon'
       ],
-      cta: 'Start Free',
+      cta: 'Start Free Forever',
       popular: false
     },
     {
-      name: 'Professional',
-      price: '$29',
-      period: 'per month',
-      description: 'For growing brands, agency founders, and high-volume multi-platform publishers.',
+      name: 'Free Pro & Automation',
+      price: '$0',
+      period: 'forever',
+      description: 'All advanced features unlocked for growing brands and high-volume publishers.',
       features: [
-        'Everything in Starter',
-        'Unlimited BYO API key generations',
-        '15 Connected Social Accounts',
-        'Unlimited scheduled posts & queue slots',
-        'Full Auto Mode with emergency kill switch',
+        '100% Free with zero subscription fees',
+        'Full Auto Mode with autonomous publishing',
         'RSS & Website Feed Auto-Summarization',
         'Media Studio with aspect ratio presets',
-        'Campaign Manager & CSV import/export'
+        'Campaign Manager & CSV import/export',
+        'Emergency Kill Switch & Safety Governance'
       ],
-      cta: 'Get Started with Pro',
+      cta: 'Launch Free Pro Features',
       popular: true
     },
     {
-      name: 'Agency & Teams',
-      price: '$79',
-      period: 'per month',
-      description: 'For marketing agencies managing multi-brand client workspaces and teams.',
+      name: 'Ad-Supported Agency',
+      price: '$0',
+      period: 'forever',
+      description: 'Multi-workspace client management funded purely via sponsor ad network.',
       features: [
         'Unlimited Workspaces & Team Members',
-        'Unlimited Social Accounts across all channels',
-        'Dedicated queue windows & quiet hours',
-        'Full Auto Multi-Topic autonomous rotation',
-        'Granular RBAC (Admin, Editor, Viewer)',
-        'Custom Webhooks & REST API access',
-        'Full data isolation & priority processing'
+        'Monetization & Ads Earnings Dashboard',
+        'Google AdSense & Custom Ad Network support',
+        'Rewarded sponsor videos for bonus AI quota',
+        'Real-time CPM & impressions analytics',
+        'Zero credit card or billing ever required'
       ],
-      cta: 'Scale Your Agency',
+      cta: 'Access Agency Free',
       popular: false
     }
   ];
@@ -144,41 +155,68 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({ onLaunchApp, onOpe
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           
+          {/* Top Leaderboard Ad on Marketing Site */}
+          <div className="mb-6">
+            <AdLeaderboard />
+          </div>
+
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-8 animate-fade-in flex-wrap justify-center">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Next-Gen Autonomous Social Media SaaS</span>
-            <span className="h-1 w-1 rounded-full bg-indigo-400" />
-            <span className="font-mono">User-Owned AI Keys</span>
+            <span>100% Free Forever</span>
+            <span className="h-1 w-1 rounded-full bg-emerald-400" />
+            <span>All Devices Supported (PWA)</span>
+            <span className="h-1 w-1 rounded-full bg-emerald-400" />
+            <span className="font-mono text-indigo-300">Ad-Supported</span>
           </div>
 
           {/* Headline */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-[1.1]">
             One Topic. Every Platform. <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
-              Automatically.
+              100% Free Forever.
             </span>
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Eliminate hours of manual rewriting. Turn a single topic or RSS feed into tailored, native posts for X, LinkedIn, Telegram, Instagram, and YouTube. Powered by your own Gemini API key for transparent 0% markup pricing.
+            Eliminate hours of manual rewriting. Turn a single topic or RSS feed into tailored, native posts for X, LinkedIn, Telegram, Instagram, and YouTube. All features unlocked completely free, supported by non-intrusive display ads.
           </p>
 
           {/* CTAs */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 flex-wrap">
             <button
               onClick={onLaunchApp}
               className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 text-white font-semibold text-base shadow-lg shadow-indigo-600/25 hover:shadow-indigo-600/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
-              <span>Launch Studio & Dashboard</span>
+              <span>Launch Free Studio & App</span>
               <ArrowRight className="h-4 w-4" />
             </button>
+
+            {onOpenAuthModal && (
+              <button
+                onClick={onOpenAuthModal}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-900 border border-indigo-500/40 text-indigo-300 hover:text-white hover:border-indigo-500 font-semibold text-base transition-all flex items-center justify-center gap-2 shadow-sm"
+              >
+                <span>User Login / Sign In</span>
+              </button>
+            )}
+
+            {isInstallable && onInstallApp && (
+              <button
+                onClick={onInstallApp}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-600 hover:text-white font-semibold text-base transition-all flex items-center justify-center gap-2 shadow-sm"
+              >
+                <Download className="h-4 w-4 text-emerald-400" />
+                <span>Install App (PWA)</span>
+              </button>
+            )}
+
             <a
               href="#interactive-demo"
               className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 font-semibold text-base transition-all flex items-center justify-center gap-2"
             >
               <Play className="h-4 w-4 text-indigo-400 fill-indigo-400" />
-              <span>Try Live Interactive Demo</span>
+              <span>Try Live Demo</span>
             </a>
           </div>
 
@@ -375,15 +413,19 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({ onLaunchApp, onOpe
         </div>
       </section>
 
-      {/* Pricing Comparison */}
+      {/* 100% Free Access Model Section */}
       <section className="py-20 bg-slate-900/30 border-y border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
-            <h2 className="text-3xl font-bold text-white tracking-tight">
-              Transparent, Direct BYO-Key Pricing
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold uppercase tracking-wider mb-4">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              <span>100% Free Forever · No Hidden Fees</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Enterprise Social Automation. $0 for Everyone.
             </h2>
-            <p className="mt-3 text-slate-400">
-              Pay the software platform for automation and scheduling. Pay AI providers directly at cost. No hidden token markups.
+            <p className="mt-3 text-slate-400 text-sm sm:text-base leading-relaxed">
+              No credit cards. No monthly subscriptions. No paywalled features. SocialPilot AI is completely free across all devices, funded exclusively by non-intrusive digital ads.
             </p>
           </div>
 
@@ -393,13 +435,13 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({ onLaunchApp, onOpe
                 key={tier.name}
                 className={`rounded-2xl p-7 flex flex-col justify-between transition-all ${
                   tier.popular
-                    ? 'bg-slate-900 border-2 border-indigo-500 shadow-xl shadow-indigo-500/10 relative scale-105'
+                    ? 'bg-slate-900 border-2 border-emerald-500 shadow-xl shadow-emerald-500/10 relative scale-105'
                     : 'bg-slate-900/40 border border-slate-800'
                 }`}
               >
                 {tier.popular && (
-                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-indigo-500 text-white text-[11px] font-bold uppercase tracking-wider shadow">
-                    Most Popular
+                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-emerald-500 text-white text-[11px] font-bold uppercase tracking-wider shadow">
+                    All Pro Features Free
                   </span>
                 )}
 
@@ -408,8 +450,8 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({ onLaunchApp, onOpe
                   <p className="text-xs text-slate-400 mt-1 mb-4">{tier.description}</p>
                   
                   <div className="flex items-baseline gap-1 my-4">
-                    <span className="text-4xl font-extrabold text-white">{tier.price}</span>
-                    <span className="text-xs text-slate-400">/{tier.period}</span>
+                    <span className="text-4xl font-extrabold text-white font-mono">{tier.price}</span>
+                    <span className="text-xs text-emerald-400 font-semibold font-mono">/{tier.period}</span>
                   </div>
 
                   <div className="border-t border-slate-800 pt-4 space-y-2.5">
@@ -426,7 +468,7 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({ onLaunchApp, onOpe
                   onClick={onLaunchApp}
                   className={`mt-8 w-full py-3 rounded-xl font-semibold text-sm transition ${
                     tier.popular
-                      ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30'
+                      ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/30'
                       : 'bg-slate-800 hover:bg-slate-700 text-slate-200'
                   }`}
                 >
@@ -435,6 +477,17 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({ onLaunchApp, onOpe
 
               </div>
             ))}
+          </div>
+
+          {/* Transparent Ad-Supported Architecture Explainer */}
+          <div className="mt-14 max-w-3xl mx-auto p-6 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-slate-900/70 to-purple-950/40 border border-indigo-500/20 text-center space-y-2">
+            <h4 className="text-sm font-bold text-white flex items-center justify-center gap-2">
+              <DollarSign className="h-4 w-4 text-emerald-400" />
+              <span>How is SocialPilot AI 100% Free Forever?</span>
+            </h4>
+            <p className="text-xs text-slate-400 leading-relaxed max-w-2xl mx-auto">
+              We cover 100% of our server, background worker, and continuous development infrastructure costs through respectful, non-intrusive sponsor ads and Google AdSense network partnerships. You get unlimited access to enterprise scheduling and AI automation without ever entering a payment method.
+            </p>
           </div>
 
         </div>
