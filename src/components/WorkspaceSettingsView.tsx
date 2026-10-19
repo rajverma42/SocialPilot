@@ -128,7 +128,7 @@ export const WorkspaceSettingsView: React.FC<WorkspaceSettingsViewProps> = ({
             Enterprise Features Fully Unlocked
           </h3>
           <p className="text-xs text-slate-400 mt-0.5">
-            Zero subscription fees. All features (Full Auto, Durable Queue, RSS, AI Studio) are free forever, supported by sponsor ads.
+            Zero subscription fees. All features (Full Auto, Durable Queue, RSS, AI Studio) are 100% free forever.
           </p>
         </div>
 

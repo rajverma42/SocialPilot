@@ -429,7 +429,7 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({
               Enterprise Social Automation. $0 for Everyone.
             </h2>
             <p className="mt-3 text-slate-400 text-sm sm:text-base leading-relaxed">
-              No credit cards. No monthly subscriptions. No paywalled features. SocialPilot AI is completely free across all devices, funded exclusively by non-intrusive digital ads.
+              No credit cards. No monthly subscriptions. No paywalled features. SocialPilot AI is completely free across all devices, empowering creators and agencies worldwide.
             </p>
           </div>
 

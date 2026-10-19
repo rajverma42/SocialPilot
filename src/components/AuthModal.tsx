@@ -221,20 +221,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       onClose();
     } catch (err: any) {
       console.warn('Google popup notice:', err.message);
-      const fallbackUser: User = {
-        id: 'usr-google-ritesh',
-        name: 'Ritesh Kumar Verma',
-        email: 'riteshkumarverma486@gmail.com',
-        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-        role: 'owner',
-        createdAt: new Date().toISOString()
-      };
-      await api.registerUser(fallbackUser);
-      try {
-        localStorage.setItem('socialpilot_user', JSON.stringify(fallbackUser));
-      } catch {}
-      onLoginSuccess(fallbackUser);
-      onClose();
+      if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+        setErrorMessage('Google sign-in was cancelled. Please try again or sign in with email.');
+      } else {
+        setErrorMessage(err.message || 'Google authentication could not be completed. Please try email sign-in.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -366,7 +357,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Ritesh Kumar Verma"
+                  placeholder="e.g. Jordan Lee"
                   className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
                 />
               </div>
@@ -384,7 +375,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="riteshkumarverma486@gmail.com"
+                placeholder="name@company.com"
                 className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
               />
             </div>

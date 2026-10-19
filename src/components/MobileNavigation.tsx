@@ -263,7 +263,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 <ShieldCheck className="h-3 w-3" />
                 <span>100% Free Forever</span>
               </div>
-              <p>Supported by Sponsor Ads</p>
+              <p>Autonomous AI Multi-Platform Publishing</p>
             </div>
 
           </div>

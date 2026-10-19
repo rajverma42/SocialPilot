@@ -62,7 +62,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
 
   // Support Bearer token or development/mock session identity
   let uid = 'usr-admin-01';
-  let email = 'riteshkumarverma486@gmail.com';
+  let email = 'creator@socialpilot.ai';
   let role: UserRole = 'owner';
 
   if (authHeader && authHeader.startsWith('Bearer ')) {

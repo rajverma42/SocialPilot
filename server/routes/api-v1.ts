@@ -113,7 +113,7 @@ v1Router.get('/workspaces/:workspaceId/members', (req: Request, res: Response) =
       {
         uid: req.user!.uid,
         email: req.user!.email,
-        displayName: 'Ritesh Kumar',
+        displayName: 'Lead Creator',
         role: req.user!.role,
         status: 'active',
         joinedAt: '2026-01-15T08:00:00Z'

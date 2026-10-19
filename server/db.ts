@@ -51,7 +51,7 @@ export const defaultMonetization: MonetizationConfig = {
   refreshIntervalSeconds: 45,
   payoutThreshold: 100,
   payoutMethod: 'adsense',
-  payoutAddress: 'riteshkumarverma486@gmail.com',
+  payoutAddress: 'contact@socialpilot.ai',
   stats: {
     impressions: 4892,
     clicks: 142,
@@ -87,8 +87,8 @@ function getInitialData(): DatabaseSchema {
     users: [
       {
         id: defaultUserId,
-        name: 'Alex Rivera',
-        email: 'riteshkumarverma486@gmail.com',
+        name: 'Velocity Media Lead',
+        email: 'creator@socialpilot.ai',
         avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
         role: 'owner',
         createdAt: new Date().toISOString(),
@@ -140,8 +140,8 @@ function getInitialData(): DatabaseSchema {
         id: 'acc-x-01',
         workspaceId: defaultWorkspaceId,
         platform: 'x',
-        accountName: 'Alex Rivera (Tech)',
-        accountHandle: '@alex_builds_ai',
+        accountName: 'Velocity Media Official',
+        accountHandle: '@velocity_media',
         avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
         status: 'connected',
         connectedAt: new Date(Date.now() - 86400000 * 12).toISOString(),
