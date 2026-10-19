@@ -33,6 +33,7 @@ export const AiSettingsView: React.FC<AiSettingsViewProps> = ({
   
   const [isValidating, setIsValidating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{ text: string; isError?: boolean } | null>(null);
   const [validationResult, setValidationResult] = useState<{
     isValid: boolean;
     models: string[];
@@ -49,9 +50,15 @@ export const AiSettingsView: React.FC<AiSettingsViewProps> = ({
   const handleTestKey = async () => {
     setIsValidating(true);
     setValidationResult(null);
+    setStatusMessage(null);
     try {
       const res = await api.validateAiKey(rawKeyInput || undefined, workspaceId);
       setValidationResult(res);
+      if (res.isValid) {
+        setStatusMessage({ text: 'API Key verified successfully! Gemini endpoint responded.' });
+      } else {
+        setStatusMessage({ text: `Key validation issue: ${res.error || 'Check key quota and permissions'}`, isError: true });
+      }
     } catch (err: any) {
       setValidationResult({
         isValid: false,
@@ -59,6 +66,7 @@ export const AiSettingsView: React.FC<AiSettingsViewProps> = ({
         latencyMs: 0,
         error: err.message || 'Key validation request failed'
       });
+      setStatusMessage({ text: `Validation failed: ${err.message}`, isError: true });
     } finally {
       setIsValidating(false);
     }
@@ -67,6 +75,7 @@ export const AiSettingsView: React.FC<AiSettingsViewProps> = ({
   const handleSaveConfig = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
+    setStatusMessage(null);
     try {
       await api.saveAiConfig({
         workspaceId,
@@ -76,28 +85,43 @@ export const AiSettingsView: React.FC<AiSettingsViewProps> = ({
       });
       setRawKeyInput('');
       setValidationResult(null);
+      setStatusMessage({ text: 'AI Configuration updated successfully! Your key is securely encrypted on the backend with AES-256-GCM.' });
       onRefreshConfig();
-      alert('AI Configuration updated successfully! Your key is securely encrypted on the backend.');
     } catch (err: any) {
-      alert(`Error saving AI config: ${err.message}`);
+      setStatusMessage({ text: `Error saving AI config: ${err.message}`, isError: true });
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleRemoveKey = async () => {
-    if (!confirm('Remove saved AI key from this workspace? Generation will stop until a new key is added.')) return;
+    setStatusMessage(null);
     try {
       await api.removeAiConfig(workspaceId);
+      setStatusMessage({ text: 'Saved AI key removed from this workspace.' });
       onRefreshConfig();
     } catch (err: any) {
-      alert(`Error removing key: ${err.message}`);
+      setStatusMessage({ text: `Error removing key: ${err.message}`, isError: true });
     }
   };
 
   return (
     <div className="space-y-6 max-w-4xl">
       
+      {/* Status Banner */}
+      {statusMessage && (
+        <div className={`p-3.5 rounded-xl border text-xs font-medium flex items-center justify-between gap-2 animate-fadeIn ${
+          statusMessage.isError
+            ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+            : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+        }`}>
+          <div className="flex items-center gap-2">
+            <span>{statusMessage.text}</span>
+          </div>
+          <button onClick={() => setStatusMessage(null)} className="text-slate-400 hover:text-white text-xs">✕</button>
+        </div>
+      )}
+
       {/* Header */}
       <div>
         <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">

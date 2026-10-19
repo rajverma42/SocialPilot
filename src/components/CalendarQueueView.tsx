@@ -326,23 +326,24 @@ export const CalendarQueueView: React.FC<CalendarQueueViewProps> = ({
         </div>
       ) : (
         /* Interactive Calendar Month Grid */
-        <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-white text-base">Calendar Schedule Overview</h3>
-            <span className="text-xs text-indigo-400 font-mono">{timezone}</span>
-          </div>
+        <div className="p-4 sm:p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4 overflow-x-auto">
+          <div className="min-w-[580px] space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-bold text-white text-base">Calendar Schedule Overview</h3>
+              <span className="text-xs text-indigo-400 font-mono">{timezone}</span>
+            </div>
 
-          <div className="grid grid-cols-7 gap-2 text-center text-xs font-bold uppercase text-slate-400 pb-2 border-b border-slate-800">
-            <span>Sun</span>
-            <span>Mon</span>
-            <span>Tue</span>
-            <span>Wed</span>
-            <span>Thu</span>
-            <span>Fri</span>
-            <span>Sat</span>
-          </div>
+            <div className="grid grid-cols-7 gap-2 text-center text-xs font-bold uppercase text-slate-400 pb-2 border-b border-slate-800">
+              <span>Sun</span>
+              <span>Mon</span>
+              <span>Tue</span>
+              <span>Wed</span>
+              <span>Thu</span>
+              <span>Fri</span>
+              <span>Sat</span>
+            </div>
 
-          <div className="grid grid-cols-7 gap-2">
+            <div className="grid grid-cols-7 gap-2">
             {Array.from({ length: 28 }).map((_, i) => {
               const dayNum = i + 1;
               const dayPosts = posts.filter(p => {
@@ -377,6 +378,7 @@ export const CalendarQueueView: React.FC<CalendarQueueViewProps> = ({
                 </div>
               );
             })}
+          </div>
           </div>
         </div>
       )}

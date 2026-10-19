@@ -27,8 +27,29 @@ export const api = {
   },
 
   // User & Workspace
-  async getUser(): Promise<User> {
-    const res = await fetch('/api/user');
+  async getUser(email?: string): Promise<User | null> {
+    const query = email ? `?email=${encodeURIComponent(email)}` : '';
+    const res = await fetch(`/api/user${query}`);
+    return res.json();
+  },
+  async registerUser(userData: Partial<User>): Promise<{ success: boolean; user: User }> {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
+    });
+    return res.json();
+  },
+  async loginUser(email: string): Promise<{ success: boolean; user: User }> {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    return res.json();
+  },
+  async logoutUser(): Promise<{ success: boolean }> {
+    const res = await fetch('/api/auth/logout', { method: 'POST' });
     return res.json();
   },
   async getWorkspaces(): Promise<Workspace[]> {

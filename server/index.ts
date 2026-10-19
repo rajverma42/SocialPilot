@@ -9,7 +9,7 @@ import { facebookService } from './facebook-service';
 import { PLATFORM_ADAPTERS } from './platform-adapters';
 import { PLATFORM_REGISTRY } from '../src/data/platformRegistry';
 import { maskSecret, encryptSecret, decryptSecret } from './crypto-utils';
-import { Post, SocialAccount, FullAutoConfig, SocialPlatform } from '../src/types';
+import { Post, SocialAccount, FullAutoConfig, SocialPlatform, User } from '../src/types';
 import { v1Router } from './routes/api-v1';
 import { correlationMiddleware, rateLimitMiddleware, authMiddleware } from './middleware/auth';
 
@@ -62,8 +62,73 @@ app.post('/api/system/toggle-emergency-pause', (req, res) => {
 
 // User & Workspaces
 app.get('/api/user', (req, res) => {
+  const email = (req.query.email as string)?.trim().toLowerCase();
+  const id = (req.query.id as string)?.trim();
+  if (email) {
+    const u = db.getUserByEmail(email);
+    return res.json(u || null);
+  }
+  if (id) {
+    const u = db.getUserById(id);
+    return res.json(u || null);
+  }
   const users = db.getUsers();
   res.json(users[0] || null);
+});
+
+app.post('/api/auth/register', (req, res) => {
+  const { name, email, role = 'editor', avatarUrl } = req.body;
+  if (!email || typeof email !== 'string' || !email.trim()) {
+    return res.status(400).json({ error: 'Valid email address is required' });
+  }
+
+  const cleanEmail = email.trim().toLowerCase();
+  const existing = db.getUserByEmail(cleanEmail);
+  if (existing) {
+    if (name) existing.name = name.trim();
+    if (role) existing.role = role;
+    if (avatarUrl) existing.avatarUrl = avatarUrl;
+    db.saveUser(existing);
+    return res.json({ success: true, user: existing, message: 'Account updated successfully' });
+  }
+
+  const newUser: User = {
+    id: `usr-${Date.now()}`,
+    name: name?.trim() || cleanEmail.split('@')[0],
+    email: cleanEmail,
+    role: role || 'editor',
+    avatarUrl: avatarUrl || `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80`,
+    createdAt: new Date().toISOString()
+  };
+
+  db.saveUser(newUser);
+  res.status(201).json({ success: true, user: newUser, message: 'Account created successfully' });
+});
+
+app.post('/api/auth/login', (req, res) => {
+  const { email } = req.body;
+  if (!email || typeof email !== 'string' || !email.trim()) {
+    return res.status(400).json({ error: 'Email required' });
+  }
+
+  const cleanEmail = email.trim().toLowerCase();
+  let user = db.getUserByEmail(cleanEmail);
+  if (!user) {
+    user = {
+      id: `usr-${Date.now()}`,
+      name: cleanEmail.split('@')[0],
+      email: cleanEmail,
+      role: 'editor',
+      avatarUrl: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80`,
+      createdAt: new Date().toISOString()
+    };
+    db.saveUser(user);
+  }
+  res.json({ success: true, user });
+});
+
+app.post('/api/auth/logout', (req, res) => {
+  res.json({ success: true, message: 'Signed out successfully' });
 });
 
 app.get('/api/workspaces', (req, res) => {

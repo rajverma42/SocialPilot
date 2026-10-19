@@ -44,7 +44,7 @@ export const AutoModeView: React.FC<AutoModeViewProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [isRunningNow, setIsRunningNow] = useState(false);
   const [lastGeneratedPost, setLastGeneratedPost] = useState<Post | null>(null);
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{ text: string; isError?: boolean } | null>(null);
 
   const availablePlatforms: SocialPlatform[] = ['x', 'linkedin', 'telegram', 'instagram', 'facebook', 'youtube', 'pinterest', 'tiktok'];
 
@@ -81,10 +81,10 @@ export const AutoModeView: React.FC<AutoModeViewProps> = ({
       };
 
       await api.saveAutoConfig(updated);
-      setStatusMessage('Full Auto configuration saved successfully.');
+      setStatusMessage({ text: 'Full Auto configuration saved successfully.' });
       onRefreshConfig();
     } catch (err: any) {
-      alert(`Error saving configuration: ${err.message}`);
+      setStatusMessage({ text: `Error saving configuration: ${err.message}`, isError: true });
     } finally {
       setIsSaving(false);
     }
@@ -92,7 +92,7 @@ export const AutoModeView: React.FC<AutoModeViewProps> = ({
 
   const handleTriggerRunNow = async () => {
     if (!hasAiKey) {
-      alert('Please configure your Gemini API Key in Settings first.');
+      setStatusMessage({ text: 'Please configure your Gemini API Key in Settings first.', isError: true });
       onNavigateToSettings();
       return;
     }
@@ -102,10 +102,10 @@ export const AutoModeView: React.FC<AutoModeViewProps> = ({
     try {
       const res = await api.triggerAutoModeNow(workspaceId);
       setLastGeneratedPost(res.post);
-      setStatusMessage(`Full Auto cycle completed! New post generated: "${res.post.topic}"`);
+      setStatusMessage({ text: `Full Auto cycle completed! New post generated: "${res.post.topic}"` });
       onRefreshConfig();
     } catch (err: any) {
-      alert(`Auto run error: ${err.message}`);
+      setStatusMessage({ text: `Auto run error: ${err.message}`, isError: true });
     } finally {
       setIsRunningNow(false);
     }
@@ -162,9 +162,20 @@ export const AutoModeView: React.FC<AutoModeViewProps> = ({
       </div>
 
       {statusMessage && (
-        <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-medium flex items-center gap-2">
-          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
-          <span>{statusMessage}</span>
+        <div className={`p-3.5 rounded-xl border text-xs font-medium flex items-center justify-between gap-2 animate-fadeIn ${
+          statusMessage.isError
+            ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+            : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+        }`}>
+          <div className="flex items-center gap-2">
+            {statusMessage.isError ? (
+              <AlertTriangle className="h-4 w-4 shrink-0 text-rose-400" />
+            ) : (
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+            )}
+            <span>{statusMessage.text}</span>
+          </div>
+          <button onClick={() => setStatusMessage(null)} className="text-slate-400 hover:text-white text-xs">✕</button>
         </div>
       )}
 

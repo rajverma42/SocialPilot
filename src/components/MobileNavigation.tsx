@@ -4,7 +4,6 @@ import {
   Sparkles, 
   Zap, 
   Calendar, 
-  Megaphone, 
   Menu, 
   X, 
   Share2, 
@@ -57,7 +56,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
     { id: 'generator', label: 'AI Studio', icon: Sparkles },
     { id: 'auto-mode', label: 'Auto', icon: Zap, active: autoModeActive },
     { id: 'calendar', label: 'Queue', icon: Calendar, count: queueCount },
-    { id: 'ads', label: 'Ads', icon: Megaphone },
+    { id: 'accounts', label: 'Accounts', icon: Share2 }
   ];
 
   const allDrawerItems = [
@@ -68,12 +67,6 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
         { id: 'generator', label: 'AI Content Studio', icon: Sparkles, badge: 'Smart' },
         { id: 'auto-mode', label: 'Full Auto Mode', icon: Zap, active: autoModeActive },
         { id: 'calendar', label: 'Calendar & Queue', icon: Calendar, count: queueCount },
-      ]
-    },
-    {
-      group: 'Website & Webapp Ads',
-      items: [
-        { id: 'ads', label: 'Ads & Sponsor Spaces', icon: Megaphone, badge: 'AdSense' }
       ]
     },
     {

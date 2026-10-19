@@ -545,18 +545,28 @@ class JsonDatabase {
     this.persist(this.data);
   }
 
-  // Getters
+  // Getters & User Management
   public getUsers(): User[] { return this.data.users; }
   public getUser(): User { return this.data.users[0]; }
+  public getUserByEmail(email: string): User | undefined {
+    if (!email) return undefined;
+    return this.data.users.find(u => u.email && u.email.toLowerCase() === email.trim().toLowerCase());
+  }
+  public getUserById(id: string): User | undefined {
+    if (!id) return undefined;
+    return this.data.users.find(u => u.id === id);
+  }
   public saveUser(user: User): User {
-    const idx = this.data.users.findIndex(u => u.id === user.id);
+    const idx = this.data.users.findIndex(u => u.id === user.id || (u.email && user.email && u.email.toLowerCase() === user.email.toLowerCase()));
     if (idx >= 0) {
-      this.data.users[idx] = user;
+      this.data.users[idx] = { ...this.data.users[idx], ...user };
+      this.save();
+      return this.data.users[idx];
     } else {
-      this.data.users[0] = user;
+      this.data.users.unshift(user);
+      this.save();
+      return user;
     }
-    this.save();
-    return user;
   }
   public getWorkspaces(): Workspace[] { return this.data.workspaces; }
   public saveWorkspace(ws: Workspace): Workspace {

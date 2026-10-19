@@ -16,7 +16,6 @@ import {
   Layers
 } from 'lucide-react';
 import { Post, SocialAccount, AnalyticsSummary, AiProviderConfig } from '../types';
-import { InFeedAd } from './ads/InFeedAd';
 
 interface DashboardViewProps {
   onNavigate: (view: string) => void;
@@ -76,17 +75,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
           <button
             onClick={() => onNavigate('generator')}
-            className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition hover:scale-[1.02]"
+            className="px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition hover:scale-[1.02]"
           >
             <Sparkles className="h-4 w-4" />
             <span>AI Content Studio</span>
           </button>
           <button
             onClick={() => onNavigate('auto-mode')}
-            className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm flex items-center gap-2 transition"
+            className="px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm flex items-center gap-2 transition"
           >
             <Play className="h-4 w-4 text-emerald-400" />
             <span>Full Auto Mode</span>
@@ -233,9 +232,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               ))}
             </div>
           )}
-
-          {/* Native In-Feed Sponsored Ad Placement */}
-          <InFeedAd category="Developer & Marketing SaaS" />
         </div>
 
         {/* Right Column: Connected Accounts & Recent Publications */}

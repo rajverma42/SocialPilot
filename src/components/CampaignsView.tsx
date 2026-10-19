@@ -30,6 +30,7 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({
   const [campDesc, setCampDesc] = useState('');
   const [campPlatforms, setCampPlatforms] = useState<SocialPlatform[]>(['x', 'linkedin', 'telegram']);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{ text: string; isError?: boolean } | null>(null);
 
   const loadCampaigns = async () => {
     try {
@@ -49,6 +50,7 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({
     if (!campName) return;
 
     setIsSubmitting(true);
+    setStatusMessage(null);
     try {
       await api.createCampaign({
         workspaceId,
@@ -60,9 +62,10 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({
       setCampName('');
       setCampDesc('');
       setIsModalOpen(false);
+      setStatusMessage({ text: 'Campaign created successfully!' });
       await loadCampaigns();
     } catch (err: any) {
-      alert(`Error creating campaign: ${err.message}`);
+      setStatusMessage({ text: `Error creating campaign: ${err.message}`, isError: true });
     } finally {
       setIsSubmitting(false);
     }
@@ -86,15 +89,38 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({
     link.href = url;
     link.download = `socialpilot-posts-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
+    setStatusMessage({ text: 'Exported scheduled posts as CSV.' });
   };
 
   const handleImportSampleCSV = () => {
-    alert('CSV Bulk Import template downloaded. You can upload batches of post topics with platform schedules.');
+    const sampleHeaders = 'Topic,Niche,Platforms,ScheduledTime,Tone\n';
+    const sampleRow = '"Top 5 AI Tools in 2026","Technology","x;linkedin;telegram","2026-10-25T14:00:00Z","Professional"\n';
+    const blob = new Blob([sampleHeaders + sampleRow], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'socialpilot-bulk-import-template.csv';
+    link.click();
+    setStatusMessage({ text: 'CSV Bulk Import template generated and downloaded.' });
   };
 
   return (
     <div className="space-y-6">
       
+      {/* Status Banner */}
+      {statusMessage && (
+        <div className={`p-3.5 rounded-xl border text-xs font-medium flex items-center justify-between gap-2 animate-fadeIn ${
+          statusMessage.isError
+            ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+            : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+        }`}>
+          <div className="flex items-center gap-2">
+            <span>{statusMessage.text}</span>
+          </div>
+          <button onClick={() => setStatusMessage(null)} className="text-slate-400 hover:text-white text-xs">✕</button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

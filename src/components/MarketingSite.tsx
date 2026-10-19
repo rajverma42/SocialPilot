@@ -24,14 +24,13 @@ import {
   Smartphone
 } from 'lucide-react';
 import { SocialPlatform } from '../types';
-import { AdLeaderboard } from './ads/AdLeaderboard';
 
 interface MarketingSiteProps {
   onLaunchApp: () => void;
   onOpenLegal: (modal: 'privacy' | 'terms' | 'deletion') => void;
   onInstallApp?: () => void;
   isInstallable?: boolean;
-  onOpenAuthModal?: () => void;
+  onOpenAuthModal?: (mode?: 'signin' | 'signup') => void;
 }
 
 export const MarketingSite: React.FC<MarketingSiteProps> = ({ 
@@ -104,19 +103,19 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({
       popular: true
     },
     {
-      name: 'Ad-Supported Agency',
+      name: 'Teams & Agencies',
       price: '$0',
       period: 'forever',
-      description: 'Multi-workspace client management funded purely via sponsor ad network.',
+      description: 'Multi-workspace client management with collaborative approvals.',
       features: [
         'Unlimited Workspaces & Team Members',
-        'Monetization & Ads Earnings Dashboard',
-        'Google AdSense & Custom Ad Network support',
-        'Rewarded sponsor videos for bonus AI quota',
-        'Real-time CPM & impressions analytics',
+        'Multi-channel synchronized queues',
+        'High-throughput background daemon workers',
+        'Multi-device responsive layouts (PWA & Desktop)',
+        'Real-time delivery & audience reach analytics',
         'Zero credit card or billing ever required'
       ],
-      cta: 'Access Agency Free',
+      cta: 'Access Teams Free',
       popular: false
     }
   ];
@@ -155,11 +154,6 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           
-          {/* Top Leaderboard Ad on Marketing Site */}
-          <div className="mb-6">
-            <AdLeaderboard />
-          </div>
-
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-8 animate-fade-in flex-wrap justify-center">
             <Sparkles className="h-3.5 w-3.5" />
@@ -167,7 +161,7 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({
             <span className="h-1 w-1 rounded-full bg-emerald-400" />
             <span>All Devices Supported (PWA)</span>
             <span className="h-1 w-1 rounded-full bg-emerald-400" />
-            <span className="font-mono text-indigo-300">Ad-Supported</span>
+            <span className="font-mono text-indigo-300">Open Creator Platform</span>
           </div>
 
           {/* Headline */}
@@ -179,23 +173,33 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Eliminate hours of manual rewriting. Turn a single topic or RSS feed into tailored, native posts for X, LinkedIn, Telegram, Instagram, and YouTube. All features unlocked completely free, supported by non-intrusive display ads.
+            Eliminate hours of manual rewriting. Turn a single topic or RSS feed into tailored, native posts for X, LinkedIn, Telegram, Instagram, and YouTube. All features unlocked completely free.
           </p>
 
           {/* CTAs */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 flex-wrap">
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 flex-wrap">
+            {onOpenAuthModal && (
+              <button
+                onClick={() => onOpenAuthModal('signup')}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 text-white font-bold text-base shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              >
+                <Sparkles className="h-4 w-4" />
+                <span>Create 100% Free Account</span>
+              </button>
+            )}
+
             <button
               onClick={onLaunchApp}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 text-white font-semibold text-base shadow-lg shadow-indigo-600/25 hover:shadow-indigo-600/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-900 border border-slate-700 text-white hover:border-slate-500 font-semibold text-base transition-all flex items-center justify-center gap-2 shadow-sm"
             >
-              <span>Launch Free Studio & App</span>
-              <ArrowRight className="h-4 w-4" />
+              <span>Launch Studio & WebApp</span>
+              <ArrowRight className="h-4 w-4 text-indigo-400" />
             </button>
 
             {onOpenAuthModal && (
               <button
-                onClick={onOpenAuthModal}
-                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-900 border border-indigo-500/40 text-indigo-300 hover:text-white hover:border-indigo-500 font-semibold text-base transition-all flex items-center justify-center gap-2 shadow-sm"
+                onClick={() => onOpenAuthModal('signin')}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-900/80 border border-indigo-500/30 text-indigo-300 hover:text-white hover:border-indigo-500 font-semibold text-base transition-all flex items-center justify-center gap-2 shadow-sm"
               >
                 <span>User Login / Sign In</span>
               </button>
@@ -213,9 +217,9 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({
 
             <a
               href="#interactive-demo"
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 font-semibold text-base transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-5 py-3.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 font-medium text-sm transition-all flex items-center justify-center gap-2"
             >
-              <Play className="h-4 w-4 text-indigo-400 fill-indigo-400" />
+              <Play className="h-3.5 w-3.5 text-indigo-400 fill-indigo-400" />
               <span>Try Live Demo</span>
             </a>
           </div>
@@ -465,7 +469,7 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({
                 </div>
 
                 <button
-                  onClick={onLaunchApp}
+                  onClick={() => onOpenAuthModal ? onOpenAuthModal('signup') : onLaunchApp()}
                   className={`mt-8 w-full py-3 rounded-xl font-semibold text-sm transition ${
                     tier.popular
                       ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/30'
@@ -479,14 +483,14 @@ export const MarketingSite: React.FC<MarketingSiteProps> = ({
             ))}
           </div>
 
-          {/* Transparent Ad-Supported Architecture Explainer */}
+          {/* Open Creator Architecture Explainer */}
           <div className="mt-14 max-w-3xl mx-auto p-6 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-slate-900/70 to-purple-950/40 border border-indigo-500/20 text-center space-y-2">
             <h4 className="text-sm font-bold text-white flex items-center justify-center gap-2">
-              <DollarSign className="h-4 w-4 text-emerald-400" />
+              <Sparkles className="h-4 w-4 text-emerald-400" />
               <span>How is SocialPilot AI 100% Free Forever?</span>
             </h4>
             <p className="text-xs text-slate-400 leading-relaxed max-w-2xl mx-auto">
-              We cover 100% of our server, background worker, and continuous development infrastructure costs through respectful, non-intrusive sponsor ads and Google AdSense network partnerships. You get unlimited access to enterprise scheduling and AI automation without ever entering a payment method.
+              We believe creator tools should not be trapped behind high monthly subscriptions. By bringing your own direct Google Gemini API key (which has a generous free tier and zero token markup), you pay direct provider cost or nothing at all. You get full access to scheduling, AI studios, and autonomous publishing without credit card requirements.
             </p>
           </div>
 

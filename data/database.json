@@ -1,6 +1,14 @@
 {
   "users": [
     {
+      "id": "usr-1792317749891",
+      "name": "Rahul Sharma",
+      "email": "rahul@test.com",
+      "role": "editor",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+      "createdAt": "2026-10-18T10:02:29.891Z"
+    },
+    {
       "id": "usr-admin-01",
       "name": "Alex Rivera",
       "email": "riteshkumarverma486@gmail.com",
@@ -30,8 +38,8 @@
       "selectedModel": "gemini-3.8-flash",
       "isValid": true,
       "lastValidatedAt": "2026-10-17T13:31:30.537Z",
-      "totalGenerations": 42,
-      "estimatedTokensUsed": 128500
+      "totalGenerations": 44,
+      "estimatedTokensUsed": 130900
     }
   },
   "socialAccounts": [
@@ -268,7 +276,7 @@
       "language": "English",
       "tone": "Engaging & Viral",
       "format": "Tips & Strategy",
-      "status": "scheduled",
+      "status": "awaiting_approval",
       "mode": "approval_required",
       "targetPlatforms": [
         "x",
@@ -337,7 +345,7 @@
       "scheduledTime": "2026-10-17T18:31:30.538Z",
       "autoApproval": false,
       "createdAt": "2026-10-17T13:31:30.538Z",
-      "updatedAt": "2026-10-17T13:31:30.538Z",
+      "updatedAt": "2026-10-18T09:09:48.466Z",
       "publishingAttempts": []
     },
     {
@@ -348,7 +356,7 @@
       "language": "English",
       "tone": "Educational & Deep",
       "format": "Carousel Breakdown",
-      "status": "queued",
+      "status": "published",
       "mode": "full_auto",
       "targetPlatforms": [
         "telegram",
@@ -420,8 +428,62 @@
       "scheduledTime": "2026-10-18T07:31:30.538Z",
       "autoApproval": true,
       "createdAt": "2026-10-17T13:31:30.538Z",
-      "updatedAt": "2026-10-17T13:31:30.538Z",
-      "publishingAttempts": []
+      "updatedAt": "2026-10-18T09:09:50.080Z",
+      "publishingAttempts": [
+        {
+          "id": "att-1792314589464-6jko",
+          "postId": "post-demo-03",
+          "accountId": "acc-tg-01",
+          "platform": "telegram",
+          "timestamp": "2026-10-18T09:09:49.464Z",
+          "status": "success",
+          "responsePayload": "{\"ok\":true,\"simulated\":true,\"message_id\":52536}",
+          "remotePostId": "tg-msg-52536",
+          "remoteUrl": "https://t.me/verified_sandbox/52536"
+        },
+        {
+          "id": "att-1792314590080-9gge",
+          "postId": "post-demo-03",
+          "accountId": "acc-ig-01",
+          "platform": "instagram",
+          "timestamp": "2026-10-18T09:09:50.080Z",
+          "status": "success",
+          "responsePayload": "{\"id\":\"ig-media-s0ut05by5\",\"simulated\":true}",
+          "remotePostId": "ig-media-s0ut05by5",
+          "remoteUrl": "https://instagram.com/p/s0ut05by5/"
+        }
+      ],
+      "remotePostIds": {
+        "telegram": "tg-msg-52536",
+        "instagram": "ig-media-s0ut05by5"
+      },
+      "destinationStates": {
+        "acc-tg-01": {
+          "accountId": "acc-tg-01",
+          "platform": "telegram",
+          "destinationName": "TechRadar Official Broadcast",
+          "status": "published",
+          "attemptsCount": 1,
+          "lastAttemptAt": "2026-10-18T09:09:48.468Z",
+          "publishedTime": "2026-10-18T09:09:49.464Z",
+          "remotePostId": "tg-msg-52536",
+          "remoteUrl": "https://t.me/verified_sandbox/52536",
+          "responsePayload": "{\"ok\":true,\"simulated\":true,\"message_id\":52536}"
+        },
+        "acc-ig-01": {
+          "accountId": "acc-ig-01",
+          "platform": "instagram",
+          "destinationName": "velocity_creators",
+          "status": "published",
+          "attemptsCount": 1,
+          "lastAttemptAt": "2026-10-18T09:09:49.464Z",
+          "publishedTime": "2026-10-18T09:09:50.080Z",
+          "remotePostId": "ig-media-s0ut05by5",
+          "remoteUrl": "https://instagram.com/p/s0ut05by5/",
+          "responsePayload": "{\"id\":\"ig-media-s0ut05by5\",\"simulated\":true}"
+        }
+      },
+      "publishedTime": "2026-10-18T09:09:50.080Z"
     }
   ],
   "autoConfigs": {
@@ -561,6 +623,26 @@
   ],
   "notifications": [
     {
+      "id": "notif-1792314590083",
+      "workspaceId": "ws-default-01",
+      "type": "post_published",
+      "title": "Multi-Destination Post Published",
+      "message": "Successfully broadcasted \"5 Modern CSS Tricks Every Web Developer ...\" to telegram, instagram.",
+      "timestamp": "2026-10-18T09:09:50.083Z",
+      "read": false,
+      "link": "/app/queue"
+    },
+    {
+      "id": "notif-1792314588466",
+      "workspaceId": "ws-default-01",
+      "type": "scheduled_approaching",
+      "title": "Approval Required",
+      "message": "Post \"Mastering Time-Zone Publishing for Global SaaS Engagement\" is scheduled but requires manual approval before broadcast.",
+      "timestamp": "2026-10-18T09:09:48.467Z",
+      "read": false,
+      "link": "/app/queue"
+    },
+    {
       "id": "notif-01",
       "workspaceId": "ws-default-01",
       "type": "post_published",
@@ -583,6 +665,113 @@
   ],
   "systemSettings": {
     "emergencyPublishingPaused": false,
-    "lastWorkerRunAt": "2026-10-17T15:37:46.778Z"
+    "lastWorkerRunAt": "2026-10-18T10:04:08.850Z"
+  },
+  "monetization": {
+    "enabled": true,
+    "adSensePublisherId": "ca-pub-6603222683084860",
+    "autoAdsEnabled": true,
+    "testAdsMode": true,
+    "headerAdEnabled": false,
+    "inFeedAdEnabled": false,
+    "rewardedAdEnabled": true,
+    "stickyFooterAdEnabled": false,
+    "customScriptCode": "",
+    "refreshIntervalSeconds": 45,
+    "payoutThreshold": 100,
+    "payoutMethod": "adsense",
+    "payoutAddress": "riteshkumarverma486@gmail.com",
+    "stats": {
+      "impressions": 4906,
+      "clicks": 144,
+      "todayEarnings": 6.9573,
+      "yesterdayEarnings": 12.85,
+      "last7DaysEarnings": 74.2,
+      "monthEarnings": 218.9269,
+      "totalLifetimeEarnings": 642.5774,
+      "eCpm": 2.65,
+      "dailyHistory": [
+        {
+          "date": "Oct 11",
+          "impressions": 620,
+          "clicks": 18,
+          "earnings": 9.8
+        },
+        {
+          "date": "Oct 12",
+          "impressions": 710,
+          "clicks": 22,
+          "earnings": 11.4
+        },
+        {
+          "date": "Oct 13",
+          "impressions": 680,
+          "clicks": 19,
+          "earnings": 10.2
+        },
+        {
+          "date": "Oct 14",
+          "impressions": 830,
+          "clicks": 26,
+          "earnings": 13.9
+        },
+        {
+          "date": "Oct 15",
+          "impressions": 790,
+          "clicks": 21,
+          "earnings": 12.1
+        },
+        {
+          "date": "Oct 16",
+          "impressions": 740,
+          "clicks": 20,
+          "earnings": 11.2
+        },
+        {
+          "date": "Oct 17",
+          "impressions": 522,
+          "clicks": 16,
+          "earnings": 8.6
+        }
+      ],
+      "unitPerformance": [
+        {
+          "id": "unit-header",
+          "name": "Header Top Leaderboard",
+          "format": "leaderboard",
+          "impressions": 2125,
+          "clicks": 68,
+          "earnings": 32.515,
+          "ctr": "3.2%"
+        },
+        {
+          "id": "unit-infeed",
+          "name": "Dashboard In-Feed Sponsor",
+          "format": "infeed",
+          "impressions": 1456,
+          "clicks": 44,
+          "earnings": 22.258,
+          "ctr": "3.0%"
+        },
+        {
+          "id": "unit-sticky",
+          "name": "Mobile Sticky Footer Banner",
+          "format": "sticky",
+          "impressions": 983,
+          "clicks": 24,
+          "earnings": 12.609,
+          "ctr": "2.4%"
+        },
+        {
+          "id": "unit-rewarded",
+          "name": "Rewarded AI Boost Video",
+          "format": "rewarded",
+          "impressions": 342,
+          "clicks": 8,
+          "earnings": 7.3,
+          "ctr": "2.3%"
+        }
+      ]
+    }
   }
 }

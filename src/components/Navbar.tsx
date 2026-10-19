@@ -11,7 +11,6 @@ import {
   CheckCircle2,
   Menu,
   Download,
-  Megaphone,
   LogIn,
   LogOut,
   User as UserIcon,
@@ -35,7 +34,7 @@ interface NavbarProps {
   onInstallApp?: () => void;
   isInstallable?: boolean;
   isInstalled?: boolean;
-  onOpenAuthModal?: () => void;
+  onOpenAuthModal?: (mode?: 'signin' | 'signup') => void;
   onSignOut?: () => void;
 }
 
@@ -145,22 +144,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Ads Option Quick Button */}
-          {isAppMode && (
-            <button
-              onClick={() => onNavigate('ads')}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                currentView === 'ads'
-                  ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/50'
-                  : 'bg-slate-900 text-slate-300 border border-slate-800 hover:text-indigo-400 hover:border-slate-700'
-              }`}
-              title="Configure Website & Webapp Ads"
-            >
-              <Megaphone className="h-3.5 w-3.5 text-indigo-400" />
-              <span className="hidden sm:inline">Ads Option</span>
-            </button>
-          )}
-
           {/* PWA Install Button */}
           {isInstallable && !isInstalled && onInstallApp && (
             <button
@@ -245,17 +228,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <span>Workspace Profile</span>
                   </button>
 
-                  <button
-                    onClick={() => {
-                      onNavigate('ads');
-                      setIsUserMenuOpen(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-slate-800 transition"
-                  >
-                    <Megaphone className="h-3.5 w-3.5 text-indigo-400" />
-                    <span>Ads & Sponsor Settings</span>
-                  </button>
-
                   {onSignOut && (
                     <button
                       onClick={() => {
@@ -272,13 +244,21 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
           ) : (
-            <div className="pl-2 border-l border-slate-800">
+            <div className="pl-2 border-l border-slate-800 flex items-center gap-1.5 sm:gap-2">
               <button
-                onClick={onOpenAuthModal}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs shadow-md transition-all hover:scale-105"
+                onClick={() => onOpenAuthModal && onOpenAuthModal('signin')}
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white font-medium text-xs transition-all"
               >
-                <LogIn className="h-3.5 w-3.5" />
+                <LogIn className="h-3.5 w-3.5 text-indigo-400" />
                 <span>Sign In</span>
+              </button>
+              <button
+                onClick={() => onOpenAuthModal && onOpenAuthModal('signup')}
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs shadow-md transition-all hover:scale-105"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Sign Up Free</span>
+                <span className="sm:hidden">Sign Up</span>
               </button>
             </div>
           )}

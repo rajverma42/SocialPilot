@@ -798,8 +798,8 @@ export const SocialAccountsView: React.FC<SocialAccountsViewProps> = ({
       {/* TELEGRAM BOT SETUP WIZARD                                 */}
       {/* ======================================================== */}
       {connectModalPlatform === 'telegram' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 p-5 sm:p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2">
                 <Bot className="h-5 w-5 text-sky-400" />
@@ -905,8 +905,8 @@ export const SocialAccountsView: React.FC<SocialAccountsViewProps> = ({
       {/* OTHER PROVIDERS MODAL (Reddit, Mastodon, X, YouTube)      */}
       {/* ======================================================== */}
       {connectModalPlatform && connectModalPlatform !== 'telegram' && connectModalPlatform !== 'facebook' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2">

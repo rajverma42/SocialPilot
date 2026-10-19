@@ -16,11 +16,8 @@ import { WorkspaceSettingsView } from './components/WorkspaceSettingsView';
 import { HelpView } from './components/HelpView';
 import { NotificationModal } from './components/NotificationModal';
 import { LegalModals } from './components/LegalModals';
-import { AdsManagementView } from './components/AdsManagementView';
 import { AuthModal } from './components/AuthModal';
 import { MobileNavigation } from './components/MobileNavigation';
-import { AdLeaderboard } from './components/ads/AdLeaderboard';
-import { StickyAdFooter } from './components/ads/StickyAdFooter';
 import { usePwaInstall } from './hooks/usePwaInstall';
 import { 
   User, 
@@ -38,8 +35,15 @@ export default function App() {
   const [isAppMode, setIsAppMode] = useState(true);
   const [currentView, setCurrentView] = useState('overview');
 
-  // Application State
-  const [user, setUser] = useState<User | null>(null);
+  // Application State with localStorage session persistence
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const stored = localStorage.getItem('socialpilot_user');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [aiConfig, setAiConfig] = useState<AiProviderConfig | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -54,16 +58,31 @@ export default function App() {
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | 'deletion' | null>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
+
+  const openAuthModal = (mode: 'signin' | 'signup' = 'signin') => {
+    setAuthModalMode(mode);
+    setIsAuthModalOpen(true);
+  };
 
   // Cross-device PWA Installation
   const { isInstallable, isInstalled, isIOS, installApp } = usePwaInstall();
 
   const handleLoginSuccess = (loggedInUser: User) => {
     setUser(loggedInUser);
+    try {
+      localStorage.setItem('socialpilot_user', JSON.stringify(loggedInUser));
+      localStorage.removeItem('socialpilot_logged_out');
+    } catch {}
     triggerToast(`Welcome, ${loggedInUser.name}! Signed in successfully.`, 'success');
   };
 
   const handleSignOut = () => {
+    try {
+      localStorage.removeItem('socialpilot_user');
+      localStorage.setItem('socialpilot_logged_out', 'true');
+      api.logoutUser().catch(() => {});
+    } catch {}
     setUser(null);
     triggerToast('Signed out successfully.', 'info');
   };
@@ -71,13 +90,29 @@ export default function App() {
   // Fetch initial state
   const refreshAll = async () => {
     try {
+      let savedEmail: string | undefined;
+      const isLoggedOut = typeof window !== 'undefined' && localStorage.getItem('socialpilot_logged_out') === 'true';
+      if (!isLoggedOut) {
+        try {
+          const stored = localStorage.getItem('socialpilot_user');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            savedEmail = parsed?.email;
+          }
+        } catch {}
+      }
+
       const [u, wsList, sys] = await Promise.all([
-        api.getUser(),
+        savedEmail ? api.getUser(savedEmail) : Promise.resolve(null),
         api.getWorkspaces(),
         api.getSystemSettings()
       ]);
 
-      setUser(u);
+      if (u) {
+        setUser(u);
+      } else if (isLoggedOut) {
+        setUser(null);
+      }
       setEmergencyPaused(sys.emergencyPublishingPaused);
 
       const activeWs = wsList[0] || null;
@@ -202,7 +237,7 @@ export default function App() {
         onInstallApp={installApp}
         isInstallable={isInstallable}
         isInstalled={isInstalled}
-        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onOpenAuthModal={(mode) => openAuthModal(mode || 'signin')}
         onSignOut={handleSignOut}
       />
 
@@ -214,7 +249,7 @@ export default function App() {
             setCurrentView('overview');
           }}
           onOpenLegal={setLegalModal}
-          onOpenAuthModal={() => setIsAuthModalOpen(true)}
+          onOpenAuthModal={(mode) => openAuthModal(mode || 'signup')}
           onInstallApp={installApp}
           isInstallable={isInstallable}
         />
@@ -232,11 +267,8 @@ export default function App() {
           />
 
           {/* Center Main View Area with Mobile Safe Padding */}
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pb-24 md:pb-8">
+          <main className="flex-1 overflow-y-auto p-3 sm:p-6 lg:p-8 pb-32 sm:pb-28 md:pb-8">
             <div className="max-w-7xl mx-auto">
-
-              {/* Responsive Header Ad Banner inside WebApp */}
-              <AdLeaderboard />
               
               {currentView === 'overview' && (
                 <DashboardView
@@ -363,10 +395,6 @@ export default function App() {
                 />
               )}
 
-              {currentView === 'ads' && (
-                <AdsManagementView onRefreshAll={refreshAll} />
-              )}
-
               {currentView === 'help' && (
                 <HelpView />
               )}
@@ -376,9 +404,6 @@ export default function App() {
 
         </div>
       )}
-
-      {/* Sticky Bottom Ad Banner */}
-      {isAppMode && <StickyAdFooter />}
 
       {/* Mobile Bottom Navigation & Drawer */}
       {isAppMode && (
@@ -416,6 +441,7 @@ export default function App() {
       {/* Full Professional User Authentication & Login Modal */}
       <AuthModal
         isOpen={isAuthModalOpen}
+        initialMode={authModalMode}
         onClose={() => setIsAuthModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
       />

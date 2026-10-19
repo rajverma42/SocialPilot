@@ -15,8 +15,7 @@ import {
   HelpCircle,
   Clock,
   CheckCircle2,
-  AlertTriangle,
-  Megaphone
+  AlertTriangle
 } from 'lucide-react';
 
 interface NavItem {
@@ -52,6 +51,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   unreadNotifications,
   aiKeyConfigured
 }) => {
+  const intelligenceItems: NavItem[] = [
+    { id: 'analytics', label: 'Analytics & Reports', icon: BarChart3 },
+    { id: 'notifications', label: 'Notifications', icon: Bell, count: unreadNotifications },
+  ];
+
   const navSections: NavSection[] = [
     {
       title: 'Core Engine',
@@ -73,11 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       title: 'Intelligence & Growth',
-      items: [
-        { id: 'analytics', label: 'Analytics & Reports', icon: BarChart3 },
-        { id: 'ads', label: 'Ads & Sponsor Spaces', icon: Megaphone, badge: 'AdSense' },
-        { id: 'notifications', label: 'Notifications', icon: Bell, count: unreadNotifications },
-      ]
+      items: intelligenceItems
     },
     {
       title: 'Configuration',

@@ -7,6 +7,7 @@ import {
   Sparkles, 
   Trash2, 
   CheckCircle2, 
+  AlertCircle,
   Clock, 
   Layers,
   ArrowRight
@@ -36,7 +37,7 @@ export const RssView: React.FC<RssViewProps> = ({
 
   const [isSyncing, setIsSyncing] = useState<string | null>(null);
   const [isConverting, setIsConverting] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{ text: string; isError?: boolean } | null>(null);
 
   const loadData = async () => {
     try {
@@ -61,6 +62,7 @@ export const RssView: React.FC<RssViewProps> = ({
     if (!newFeedUrl) return;
 
     setIsAddingFeed(true);
+    setStatusMessage(null);
     try {
       const feed = await api.addRssFeed({
         workspaceId,
@@ -72,9 +74,9 @@ export const RssView: React.FC<RssViewProps> = ({
       await api.syncRssFeed(feed.id);
       await loadData();
       setSelectedFeedId(feed.id);
-      setStatusMessage('RSS feed added and initial articles indexed.');
+      setStatusMessage({ text: 'RSS feed added and initial articles indexed.' });
     } catch (err: any) {
-      alert(`Error adding feed: ${err.message}`);
+      setStatusMessage({ text: `Error adding feed: ${err.message}`, isError: true });
     } finally {
       setIsAddingFeed(false);
     }
@@ -82,12 +84,13 @@ export const RssView: React.FC<RssViewProps> = ({
 
   const handleSyncFeed = async (feedId: string) => {
     setIsSyncing(feedId);
+    setStatusMessage(null);
     try {
       const res = await api.syncRssFeed(feedId);
       await loadData();
-      setStatusMessage(`Polled feed: ${res.count} articles synced.`);
+      setStatusMessage({ text: `Polled feed: ${res.count} articles synced.` });
     } catch (err: any) {
-      alert(`Sync failed: ${err.message}`);
+      setStatusMessage({ text: `Sync failed: ${err.message}`, isError: true });
     } finally {
       setIsSyncing(null);
     }
@@ -95,25 +98,27 @@ export const RssView: React.FC<RssViewProps> = ({
 
   const handleConvertToPost = async (itemId: string) => {
     setIsConverting(itemId);
+    setStatusMessage(null);
     try {
       const res = await api.convertRssToPost(itemId, workspaceId);
       onPostCreated(res.post);
-      setStatusMessage(`Article converted to multi-platform post: "${res.post.topic}"`);
+      setStatusMessage({ text: `Article converted to multi-platform post: "${res.post.topic}"` });
       await loadData();
     } catch (err: any) {
-      alert(`Conversion error: ${err.message}`);
+      setStatusMessage({ text: `Conversion error: ${err.message}`, isError: true });
     } finally {
       setIsConverting(null);
     }
   };
 
   const handleDeleteFeed = async (feedId: string) => {
-    if (!confirm('Remove this RSS source?')) return;
+    setStatusMessage(null);
     try {
       await api.deleteRssFeed(feedId);
+      setStatusMessage({ text: 'RSS source removed from workspace.' });
       await loadData();
     } catch (err: any) {
-      alert(`Error deleting feed: ${err.message}`);
+      setStatusMessage({ text: `Error deleting feed: ${err.message}`, isError: true });
     }
   };
 
@@ -136,9 +141,20 @@ export const RssView: React.FC<RssViewProps> = ({
       </div>
 
       {statusMessage && (
-        <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-medium flex items-center gap-2">
-          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
-          <span>{statusMessage}</span>
+        <div className={`p-3.5 rounded-xl border text-xs font-medium flex items-center justify-between gap-2 animate-fadeIn ${
+          statusMessage.isError
+            ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+            : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+        }`}>
+          <div className="flex items-center gap-2">
+            {statusMessage.isError ? (
+              <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
+            ) : (
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+            )}
+            <span>{statusMessage.text}</span>
+          </div>
+          <button onClick={() => setStatusMessage(null)} className="text-slate-400 hover:text-white text-xs">✕</button>
         </div>
       )}
 

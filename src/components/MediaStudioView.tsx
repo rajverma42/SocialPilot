@@ -40,6 +40,8 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ workspaceId })
     { id: '2:3', label: 'Pin Standard (2:3)', useCase: 'Pinterest Pin Graphic' },
   ];
 
+  const [statusMessage, setStatusMessage] = useState<{ text: string; isError?: boolean } | null>(null);
+
   const loadAssets = async () => {
     try {
       const data = await api.getMediaAssets(workspaceId);
@@ -58,6 +60,7 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ workspaceId })
     if (!assetUrl) return;
 
     setIsSubmitting(true);
+    setStatusMessage(null);
     try {
       await api.addMediaAsset({
         workspaceId,
@@ -70,22 +73,24 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ workspaceId })
 
       setAssetName('');
       setAssetUrl('');
+      setStatusMessage({ text: 'Media asset uploaded and indexed to library.' });
       await loadAssets();
     } catch (err: any) {
-      alert(`Upload error: ${err.message}`);
+      setStatusMessage({ text: `Upload error: ${err.message}`, isError: true });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this media asset?')) return;
+    setStatusMessage(null);
     try {
       await api.deleteMediaAsset(id);
       await loadAssets();
       if (selectedAsset?.id === id) setSelectedAsset(null);
+      setStatusMessage({ text: 'Asset removed from library.' });
     } catch (err: any) {
-      alert(`Deletion error: ${err.message}`);
+      setStatusMessage({ text: `Deletion error: ${err.message}`, isError: true });
     }
   };
 
@@ -97,6 +102,20 @@ export const MediaStudioView: React.FC<MediaStudioViewProps> = ({ workspaceId })
   return (
     <div className="space-y-6">
       
+      {/* Status Banner */}
+      {statusMessage && (
+        <div className={`p-3.5 rounded-xl border text-xs font-medium flex items-center justify-between gap-2 animate-fadeIn ${
+          statusMessage.isError
+            ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+            : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+        }`}>
+          <div className="flex items-center gap-2">
+            <span>{statusMessage.text}</span>
+          </div>
+          <button onClick={() => setStatusMessage(null)} className="text-slate-400 hover:text-white text-xs">✕</button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
